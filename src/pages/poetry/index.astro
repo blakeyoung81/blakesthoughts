@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allPoetry = await getCollection('poetry', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort poems by date in descending order
+const sortedPoems = allPoetry.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+
+// Format date function
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+---
+
+<BaseLayout title="Poetry">
+  <div class="max-w-4xl mx-auto">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold mb-4">Poetry</h1>
+      <p class="text-xl text-zinc-700 dark:text-zinc-300">
+        Words, rhythms, and reflections on life, medicine, and humanity.
+      </p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      {sortedPoems.map((poem) => (
+        <article class="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:shadow-md transition">
+          <h2 class="text-2xl font-bold mb-2">
+            <a href={`/poetry/${poem.slug}`} class="hover:text-accent transition">
+              {poem.data.title}
+            </a>
+          </h2>
+          
+          <div class="text-sm text-zinc-500 mb-4">
+            <time datetime={poem.data.pubDate.toISOString()}>
+              {formatDate(poem.data.pubDate)}
+            </time>
+          </div>
+          
+          <p class="text-zinc-600 dark:text-zinc-400 mb-4">
+            {poem.data.description}
+          </p>
+          
+          <a href={`/poetry/${poem.slug}`} class="text-accent hover:underline inline-flex items-center">
+            Read poem
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="ml-1">
+              <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout> 

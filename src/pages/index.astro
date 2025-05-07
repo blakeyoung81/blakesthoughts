@@ -1,49 +1,81 @@
 ---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const recentBlogPosts = await getCollection("blog", ({ data }) => {
+	return !data.draft;
+}).then(posts => 
+	posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+		 .slice(0, 3)
+);
+
+const recentProjects = await getCollection("projects").then(projects => 
+	projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+		   .slice(0, 2)
+);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
+<BaseLayout>
+	<div class="space-y-16">
+		<section class="py-10 text-center">
+			<h1 class="text-5xl font-bold mb-6">Blake's Thoughts</h1>
+			<p class="text-xl max-w-2xl mx-auto text-zinc-700 dark:text-zinc-300">
+				A personal collection of essays on med-tech, deterministic philosophy, creative works, and the occasional rant about Step 1 prep.
 			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+		</section>
+
+		<section>
+			<div class="flex justify-between items-center mb-6">
+				<h2 class="text-2xl font-bold">Recent Writings</h2>
+				<a href="/blog" class="text-accent hover:underline">View all →</a>
+			</div>
+			<div class="grid md:grid-cols-3 gap-6">
+				{recentBlogPosts.map(post => (
+					<article class="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:shadow-md transition">
+						<h3 class="font-semibold text-lg mb-2">
+							<a href={`/blog/${post.slug}`}>{post.data.title}</a>
+						</h3>
+						<p class="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{post.data.description}</p>
+						<time datetime={post.data.pubDate.toISOString()} class="text-xs text-zinc-500">
+							{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+						</time>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section>
+			<div class="flex justify-between items-center mb-6">
+				<h2 class="text-2xl font-bold">Featured Projects</h2>
+				<a href="/projects" class="text-accent hover:underline">View all →</a>
+			</div>
+			<div class="grid md:grid-cols-2 gap-6">
+				{recentProjects.map(project => (
+					<article class="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:shadow-md transition">
+						<h3 class="font-semibold text-lg mb-2">
+							<a href={`/projects/${project.slug}`}>{project.data.title}</a>
+						</h3>
+						<p class="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{project.data.description}</p>
+						<div class="flex flex-wrap gap-2">
+							{project.data.tech.map(tech => (
+								<span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
+							))}
+						</div>
+					</article>
+				))}
+			</div>
+		</section>
+
+		<section class="text-center py-10">
+			<h2 class="text-2xl font-bold mb-4">Connect with me</h2>
+			<p class="mb-6">Have questions or want to collaborate? I'm always open to interesting discussions.</p>
+			<a href="/contact" class="bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-accent-dark transition">
+				Get in touch
+			</a>
+		</section>
+	</div>
+</BaseLayout>

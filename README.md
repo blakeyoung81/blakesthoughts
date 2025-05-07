@@ -1,68 +1,96 @@
-# Astro Starter Kit: Blog
+# Blake's Thoughts
 
-```sh
-npm create astro@latest -- --template blog
+A personal website and blog built with Astro, Tailwind CSS, and Markdown content collections.
+
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+## 📝 Content Management
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+This site uses Astro's Content Collections to manage blog posts, poetry, and projects.
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+### Creating New Content
 
-Features:
+Use the built-in content creation script:
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+```bash
+# Create a new blog post
+npm run new blog "My New Blog Post"
 
-## 🚀 Project Structure
+# Create a new poem
+npm run new poetry "My New Poem"
 
-Inside of your Astro project, you'll see the following folders and files:
+# Create a new project
+npm run new projects "My New Project"
+```
 
-```text
-├── public/
+The script will prompt for additional information like description, repository URL (for projects), etc.
+
+### Content Structure
+
+- `src/content/blog/` - Blog posts
+- `src/content/poetry/` - Poetry
+- `src/content/projects/` - Projects
+
+## 🧞 Project Structure
+
+```
+├── public/             # Static assets
+│   └── fonts/          # Web fonts
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/     # Reusable UI components
+│   ├── content/        # Content collections (blog, poetry, projects)
+│   ├── layouts/        # Page layouts
+│   ├── pages/          # Page routes and templates
+│   └── styles/         # Global styles
+├── scripts/            # Utility scripts
+└── astro.config.mjs    # Astro configuration
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🔧 Configuration
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Site Configuration
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+Update the site URL and other settings in `astro.config.mjs`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Tailwind Configuration
 
-## 🧞 Commands
+Customize colors, fonts, and other Tailwind settings in `tailwind.config.cjs`.
 
-All commands are run from the root of the project, from a terminal:
+## 📦 Deployment
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+This site is configured to deploy to DigitalOcean App Platform:
 
-## 👀 Want to learn more?
+1. Create a new app on DigitalOcean App Platform
+2. Connect your GitHub repository
+3. Configure as a Static Site:
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Add your custom domain in Settings → Domains
+5. Update your domain's nameservers to:
+   - ns1.digitalocean.com
+   - ns2.digitalocean.com
+   - ns3.digitalocean.com
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📄 License
 
-## Credit
+This project is for personal use only. All content and code © Blake Young.
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+## 🙏 Acknowledgments
+
+- [Astro](https://astro.build/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [DigitalOcean](https://www.digitalocean.com/) 
