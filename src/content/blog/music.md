@@ -1,10 +1,8 @@
 ---
 title: "Exploring Music"
 description: "A sample post about Music."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Music"]
 ---
 
-# Thoughts on Music
-
-This is a placeholder post to explore the concept of Music. More content will be coming soon.
+This is a sample blog post about music. Content will be added here later.

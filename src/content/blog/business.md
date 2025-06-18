@@ -1,10 +1,8 @@
 ---
 title: "Exploring Business"
 description: "A sample post about Business."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Business"]
 ---
 
-# Thoughts on Business
-
-This is a placeholder post to explore the concept of Business. More content will be coming soon.
+This is a sample blog post about business. Content will be added here later.

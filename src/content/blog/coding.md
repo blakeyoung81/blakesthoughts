@@ -1,10 +1,8 @@
 ---
 title: "Exploring Coding"
 description: "A sample post about Coding."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Coding"]
 ---
 
-# Thoughts on Coding
-
-This is a placeholder post to explore the concept of Coding. More content will be coming soon.
+This is a sample blog post about coding. Content will be added here later.

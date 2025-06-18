@@ -1,10 +1,8 @@
 ---
 title: "Exploring Philosophy"
 description: "A sample post about Philosophy."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Philosophy"]
 ---
 
-# Thoughts on Philosophy
-
-This is a placeholder post to explore the concept of Philosophy. More content will be coming soon.
+This is a sample blog post about philosophy. Content will be added here later.

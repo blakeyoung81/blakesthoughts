@@ -1,10 +1,8 @@
 ---
 title: "Exploring Poetry"
 description: "A sample post about Poetry."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Poetry"]
 ---
 
-# Thoughts on Poetry
-
-This is a placeholder post to explore the concept of Poetry. More content will be coming soon.
+This is a sample blog post about poetry. Content will be added here later.

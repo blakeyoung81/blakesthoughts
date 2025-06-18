@@ -1,10 +1,8 @@
 ---
 title: "Exploring Truth"
 description: "A sample post about Truth."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Truth"]
 ---
 
-# Thoughts on Truth
-
-This is a placeholder post to explore the concept of Truth. More content will be coming soon.
+This is a sample blog post about truth. Content will be added here later.

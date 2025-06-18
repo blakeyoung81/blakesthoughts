@@ -1,10 +1,8 @@
 ---
 title: "Exploring Free Will"
 description: "A sample post about Free Will."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Free Will"]
 ---
 
-# Thoughts on Free Will
-
-This is a placeholder post to explore the concept of Free Will. More content will be coming soon.
+This is a sample blog post about free will. Content will be added here later.

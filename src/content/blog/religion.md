@@ -1,10 +1,8 @@
 ---
 title: "Exploring Religion"
 description: "A sample post about Religion."
-pubDate: 2025-06-18
+pubDate: "2023-10-27"
 tags: ["Religion"]
 ---
 
-# Thoughts on Religion
-
-This is a placeholder post to explore the concept of Religion. More content will be coming soon.
+This is a sample blog post about religion. Content will be added here later.
