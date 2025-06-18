@@ -2,12 +2,20 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const allBlogPosts = await getCollection('blog', ({ data }) => {
-	return import.meta.env.PROD ? !data.draft : true;
-});
+const allBlogPosts = await getCollection('blog');
+
+const postsWithSlug = allBlogPosts.map(post => ({
+	...post,
+	slug: post.slug,
+}));
+
+// Filter posts based on environment
+const filteredPosts = postsWithSlug.filter(post => 
+	import.meta.env.PROD ? !post.data.draft : true
+);
 
 // Sort posts by date in descending order
-const sortedPosts = allBlogPosts.sort(
+const sortedPosts = filteredPosts.sort(
 	(a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
 );
 

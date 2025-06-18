@@ -5,7 +5,18 @@ import { NeuralNetScene } from '../components/NeuralNetScene.tsx';
 
 // Fetch all posts and derive a unique list of tags for the hero scene
 const allPosts = await getCollection('blog');
-const topics = [...new Set(allPosts.map(post => post.data.tags).flat().filter(Boolean))];
+console.log('All posts count:', allPosts.length);
+
+// Check which posts have tags
+const postsWithTags = allPosts.filter(post => post.data.tags);
+console.log('Posts with tags:', postsWithTags.length);
+console.log('Sample post with tags:', postsWithTags[0]?.data);
+
+const allTags = allPosts.map(post => post.data.tags).filter(tags => tags).flat();
+console.log('All tags found:', allTags);
+
+const topics = [...new Set(allTags)];
+console.log('Final topics array:', topics);
 
 // Get the 3 most recent posts for the "Recent Writings" section
 const recentBlogPosts = allPosts

@@ -3,8 +3,9 @@ import { z, defineCollection } from "astro:content";
 const base = {
   title: z.string(),
   description: z.string().max(200),
-  pubDate: z.date(),
+  pubDate: z.coerce.date(),
   draft: z.boolean().optional(),
+  tags: z.array(z.string()).optional(),
 };
 
 export const collections = {

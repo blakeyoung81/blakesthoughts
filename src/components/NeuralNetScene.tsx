@@ -57,23 +57,24 @@ function Word({ topic, onHover, onLeave, ...props }) {
   );
 }
 
-function Cloud({ topics, count, radius, onWordHover, onWordLeave }) {
-  const nodes = useMemo(() => {
-    if (!topics || topics.length === 0) return [];
-    return [...Array(count)].map((_, i) => {
-      const topic = topics[i % topics.length];
-      const phi = Math.acos(-1 + (2 * i) / count);
-      const theta = Math.sqrt(count * Math.PI) * phi;
-      const position = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
-      return { topic, position };
-    });
-  }, [topics, count, radius]);
-
+function Cloud({ topics, radius, onWordHover, onWordLeave }) {
+  const count = topics.length;
   return (
     <>
-      {nodes.map(({ topic, position }, i) => (
-         <Word key={i} topic={topic} onHover={onWordHover} onLeave={onWordLeave} position={position} />
-      ))}
+      {topics.map((topic, i) => {
+        const phi = Math.acos(-1 + (2 * i) / count);
+        const theta = Math.sqrt(count * Math.PI) * phi;
+        const position = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
+        return (
+          <Word 
+            key={i} 
+            topic={topic} 
+            onHover={onWordHover} 
+            onLeave={onWordLeave} 
+            position={position} 
+          />
+        );
+      })}
     </>
   );
 }
@@ -94,6 +95,11 @@ function BlakeImage({ imageUrl }) {
 }
 
 export function NeuralNetScene({ topics = [] }) {
+    console.log('NeuralNetScene received topics:', topics);
+    console.log('Topics type:', typeof topics);
+    console.log('Topics is array:', Array.isArray(topics));
+    console.log('Topics length:', topics?.length);
+    
     const [imageUrl, setImageUrl] = useState('/Default.png');
 
     const handleWordHover = (topic) => {
@@ -110,7 +116,6 @@ export function NeuralNetScene({ topics = [] }) {
             {topics.length > 0 && (
               <Cloud 
                 topics={topics}
-                count={topics.length} 
                 radius={28} 
                 onWordHover={handleWordHover}
                 onWordLeave={handleWordLeave}
