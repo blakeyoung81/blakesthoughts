@@ -10,6 +10,9 @@ export default defineConfig({
   site: 'https://blakesthoughts.com',    // canonical URL
   integrations: [tailwind(), sitemap(), mdx(), react()],
   markdown: {
-    syntaxHighlight: 'github-dark',
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      theme: 'github-dark',
+    },
   },
 });

@@ -5,6 +5,8 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import MindCloud from '../components/MindCloud.astro';
+import { NeuralNetScene } from '../components/NeuralNetScene.tsx';
 
 const recentBlogPosts = await getCollection("blog", ({ data }) => {
 	return !data.draft;
@@ -17,65 +19,162 @@ const recentProjects = await getCollection("projects").then(projects =>
 	projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 		   .slice(0, 2)
 );
+
+const allPosts = await getCollection('blog');
+const topics = [...new Set(allPosts.map(post => post.data.tags).flat().filter(Boolean))];
 ---
 
 <BaseLayout>
-	<div class="space-y-16">
-		<section class="py-10 text-center">
-			<h1 class="text-5xl font-bold mb-6">Blake's Thoughts</h1>
-			<p class="text-xl max-w-2xl mx-auto text-zinc-700 dark:text-zinc-300">
-				A personal collection of essays on med-tech, deterministic philosophy, creative works, and the occasional rant about Step 1 prep.
-			</p>
+	<div class="relative w-full h-screen bg-gradient-to-r from-indigo-900 via-purple-900 to-fuchsia-900">
+		
+		<!-- R3F Scene takes full screen -->
+		<div class="absolute inset-0 z-10">
+			<NeuralNetScene client:load topics={topics} />
+		</div>
+
+		<!-- Title bottom right -->
+		<div class="absolute bottom-8 right-8 z-30 pointer-events-none">
+			<h1 class="text-5xl md:text-7xl font-bold text-white text-right drop-shadow-lg">Blake's<br>Thoughts</h1>
+		</div>
+
+	</div>
+
+	<div class="relative space-y-32">
+		<!-- Interactive "Mind" Hero Section -->
+		<section class="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden p-4">
+			<div class="relative z-10 group w-full max-w-2xl">
+				<!-- The central, morphing "mind" element -->
+				<div class="relative w-72 h-72 md:w-80 md:h-80 mx-auto transition-all duration-700 group-hover:w-[48rem] group-hover:h-80 group-hover:max-w-full">
+					<!-- The photo, masked and revealed on hover -->
+					<div
+						class="absolute inset-0 bg-cover bg-center animate-morph opacity-0 group-hover:opacity-50 transition-all duration-1000 delay-200"
+						style="background-image: url('/blake-mind.jpg'); animation-direction: reverse; background-position: 30% 50%;"
+					></div>
+					<!-- The pulsating energy orb -->
+					<div
+						class="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 animate-morph animate-pulse-color opacity-40 group-hover:opacity-10 transition-opacity duration-1000"
+					></div>
+					 <!-- Inner glow and border -->
+					<div class="absolute inset-0 border-2 border-white/10 animate-morph animate-glow group-hover:border-purple-400/50 transition-all duration-1000"></div>
+				</div>
+
+				<!-- The text, which also reacts to hover -->
+				<div class="relative transition-all duration-700 group-hover:mt-[-20rem] md:group-hover:mt-[-24rem]">
+					<h1 class="text-6xl md:text-8xl font-black transform group-hover:scale-90 transition-transform duration-500">
+						<span class="block bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Blake's</span>
+						<span class="block mt-[-1rem] md:mt-[-2rem] bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Thoughts</span>
+					</h1>
+					<p class="text-xl text-white/50 mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 delay-200 pointer-events-none">
+						A glimpse into the mind.
+					</p>
+				</div>
+			</div>
+			
+			<!-- Scroll down indicator, appears on hover -->
+			<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 delay-300 animate-bounce">
+				<div class="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+					<div class="w-1 h-3 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full mt-2 animate-pulse"></div>
+				</div>
+			</div>
 		</section>
 
-		<section>
-			<div class="flex justify-between items-center mb-6">
-				<h2 class="text-2xl font-bold">Recent Writings</h2>
-				<a href="/blog" class="text-accent hover:underline">View all →</a>
-			</div>
-			<div class="grid md:grid-cols-3 gap-6">
-				{recentBlogPosts.map(post => (
-					<article class="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:shadow-md transition">
-						<h3 class="font-semibold text-lg mb-2">
-							<a href={`/blog/${post.slug}`}>{post.data.title}</a>
-						</h3>
-						<p class="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{post.data.description}</p>
-						<time datetime={post.data.pubDate.toISOString()} class="text-xs text-zinc-500">
-							{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-						</time>
-					</article>
-				))}
+		<!-- The rest of the content, which will appear after the hero -->
+		<section class="relative z-10 bg-slate-900/50 backdrop-blur-sm py-20">
+			<div class="max-w-7xl mx-auto px-6 space-y-24">
+				<!-- Recent Writings Section -->
+				<section>
+					<div class="flex justify-between items-center mb-8">
+						<h2 class="text-4xl font-bold bg-gradient-to-r from-gray-100 to-gray-400 bg-clip-text text-transparent">Recent Writings</h2>
+						<a href="/blog" class="group/link flex items-center space-x-2 text-blue-400 hover:text-blue-300 font-medium">
+							<span>View all</span>
+							<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+							</svg>
+						</a>
+					</div>
+					<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+						{recentBlogPosts.map(post => (
+							<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors duration-300 hover:-translate-y-2 transform">
+								<h3 class="font-bold text-xl mb-3 text-white/90 group-hover/card:text-blue-400 transition-colors">
+									<a href={`/blog/${post.slug}`} class="stretched-link">{post.data.title}</a>
+								</h3>
+								<p class="text-white/60 mb-4 line-clamp-3">{post.data.description}</p>
+								<time datetime={post.data.pubDate.toISOString()} class="text-sm text-white/40 font-medium">
+									{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+								</time>
+							</article>
+						))}
+					</div>
+				</section>
+				
+				<!-- Featured Projects Section -->
+				<section>
+					<div class="flex justify-between items-center mb-8">
+						<h2 class="text-4xl font-bold bg-gradient-to-r from-gray-100 to-gray-400 bg-clip-text text-transparent">Featured Projects</h2>
+						<a href="/projects" class="group/link flex items-center space-x-2 text-purple-400 hover:text-purple-300 font-medium">
+							<span>View all</span>
+							<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+							</svg>
+						</a>
+					</div>
+					<div class="grid md:grid-cols-2 gap-8">
+						{recentProjects && recentProjects.length > 0 ? recentProjects.map(project => (
+							<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors duration-300 hover:-translate-y-2 transform">
+								<h3 class="font-bold text-xl mb-3 text-white/90 group-hover/card:text-purple-400 transition-colors">
+									<a href={`/projects/${project.slug}`} class="stretched-link">{project.data.title}</a>
+								</h3>
+								<p class="text-white/60 mb-6 line-clamp-3">{project.data.description}</p>
+								<div class="flex flex-wrap gap-2">
+									{project.data.tech && project.data.tech.map(tech => (
+										<span class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 text-sm px-3 py-1 rounded-full font-medium">{tech}</span>
+									))}
+								</div>
+							</article>
+						)) : (
+							<div class="col-span-2 text-center py-12">
+								<div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+									<div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center animate-pulse">
+										<svg class="w-8 h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+										</svg>
+									</div>
+									<h3 class="text-xl font-semibold text-white/70 mb-2">Projects Coming Soon</h3>
+									<p class="text-white/50">I'm working on some exciting projects. Check back soon for updates!</p>
+								</div>
+							</div>
+						)}
+					</div>
+				</section>
 			</div>
 		</section>
 
-		<section>
-			<div class="flex justify-between items-center mb-6">
-				<h2 class="text-2xl font-bold">Featured Projects</h2>
-				<a href="/projects" class="text-accent hover:underline">View all →</a>
+		<section class="relative text-center py-16">
+			<div class="absolute inset-0 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 dark:from-blue-950/10 dark:via-purple-950/10 dark:to-indigo-950/10 rounded-2xl"></div>
+			<div class="relative z-10">
+				<h2 class="text-4xl font-bold mb-6 gradient-text">Connect with me</h2>
+				<p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+					Have questions or want to collaborate? I'm always open to interesting discussions about technology, philosophy, and creative endeavors.
+				</p>
+				<a href="/contact" class="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+					<span>Get in touch</span>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+					</svg>
+				</a>
 			</div>
-			<div class="grid md:grid-cols-2 gap-6">
-				{recentProjects.map(project => (
-					<article class="border border-zinc-200 dark:border-zinc-800 rounded-lg p-6 hover:shadow-md transition">
-						<h3 class="font-semibold text-lg mb-2">
-							<a href={`/projects/${project.slug}`}>{project.data.title}</a>
-						</h3>
-						<p class="text-zinc-600 dark:text-zinc-400 text-sm mb-4">{project.data.description}</p>
-						<div class="flex flex-wrap gap-2">
-							{project.data.tech.map(tech => (
-								<span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
-							))}
-						</div>
-					</article>
-				))}
-			</div>
-		</section>
-
-		<section class="text-center py-10">
-			<h2 class="text-2xl font-bold mb-4">Connect with me</h2>
-			<p class="mb-6">Have questions or want to collaborate? I'm always open to interesting discussions.</p>
-			<a href="/contact" class="bg-accent text-white px-6 py-3 rounded-lg font-medium hover:bg-accent-dark transition">
-				Get in touch
-			</a>
 		</section>
 	</div>
 </BaseLayout>
+
+<script>
+	document.addEventListener('word-click', () => {
+		const normalState = document.getElementById('blake-normal');
+		const selectedState = document.getElementById('blake-selected');
+
+		if (normalState && selectedState) {
+			normalState.style.opacity = '0';
+			selectedState.style.opacity = '1';
+		}
+	});
+</script>
