@@ -1,0 +1,41 @@
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  // Using a Set to ensure unique tags
+  const allPosts = await getCollection('blog');
+  const uniqueTags = new Set(allPosts.map(post => post.data.tags || []).flat());
+
+  return Array.from(uniqueTags).map(tag => {
+    const filteredPosts = allPosts.filter(post => post.data.tags?.includes(tag));
+    return {
+      params: { slug: tag.toLowerCase().replace(/ /g, '-') },
+      props: { 
+        topicName: tag,
+        posts: filteredPosts 
+      },
+    };
+  });
+}
+
+const { slug } = Astro.params;
+const { topicName, posts } = Astro.props;
+
+// Capitalize the first letter of the topic
+const topicTitle = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
+
+<BaseLayout title={`Topic: ${topicName}`}>
+  <div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-bold mb-2">Topic: <span class="capitalize">{topicName}</span></h1>
+    <p class="text-xl text-gray-600 mb-8">Posts related to this topic.</p>
+
+    <div class="grid gap-8">
+      {posts.map(post => (
+        <a href={`/blog/${post.slug}/`} class="block p-6 border rounded-lg hover:shadow-lg transition-shadow duration-200">
+          <h2 class="text-2xl font-bold mb-2">{post.data.title}</h2>
+          <p class="text-gray-700">{post.data.description}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

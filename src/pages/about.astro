@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About">
+	<div class="prose prose-zinc dark:prose-invert max-w-none">
+		<h1 class="text-3xl font-bold mb-6">About Me</h1>
+		
+		<div class="flex flex-col md:flex-row gap-8 mb-12">
+			<div class="md:w-2/3">
+				<p class="text-lg mb-4">
+					Hello! I'm Blake Young, a physician and software developer with a passion for the intersection of medicine and technology.
+				</p>
+				
+				<p class="mb-4">
+					My journey began in medical school, where I found myself both fascinated by human physiology and frustrated by the outdated tools clinicians were using. 
+					This dual perspective led me to explore software development as a means to create better solutions for healthcare providers and patients alike.
+				</p>
+				
+				<p>
+					Today, I split my time between clinical practice and building tools that make medical education more accessible and healthcare delivery more efficient.
+					This site serves as a repository for my thoughts on med-tech, personal projects, occasional poetry, and reflections on the practice of medicine.
+				</p>
+			</div>
+			
+			<div class="md:w-1/3">
+				<div class="bg-zinc-100 dark:bg-zinc-800 p-6 rounded-lg">
+					<h2 class="text-xl font-semibold mb-3">At a Glance</h2>
+					<ul class="space-y-2">
+						<li><strong>Education:</strong> MD, Stanford University</li>
+						<li><strong>Tech Stack:</strong> Python, React, Next.js, Astro</li>
+						<li><strong>Research Areas:</strong> Medical Education, Clinical Decision Support</li>
+						<li><strong>Hobbies:</strong> Poetry, Trail Running, Piano</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<h2 class="text-2xl font-bold mb-4">Professional Background</h2>
+		<p class="mb-4">
+			My clinical background is in internal medicine, with a focus on hospital medicine. I've worked in various healthcare settings, from large academic medical centers to rural community hospitals, gaining perspective on the diverse challenges facing our healthcare system.
+		</p>
+		<p class="mb-8">
+			On the technical side, I'm particularly interested in natural language processing applications in healthcare, retrieval-augmented generation for medical education, and building intuitive interfaces for clinical decision support.
+		</p>
+		
+		<h2 class="text-2xl font-bold mb-4">Why "Blake's Thoughts"?</h2>
+		<p class="mb-4">
+			This site started as a digital garden — a place to cultivate ideas without the pressure of perfection. Some posts are polished essays, others are works in progress, and a few are just quick notes to myself that might be useful to others.
+		</p>
+		<p>
+			I believe in learning in public and sharing knowledge freely. If you find something helpful or have thoughts to share, please reach out through the contact page.
+		</p>
+	</div>
+</BaseLayout>

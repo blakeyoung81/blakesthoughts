@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
+		props: post,
+	}));
+}
+
+const post = Astro.props;
+
+let Content;
+let contentError = null;
+
+try {
+	const result = await post.render();
+	Content = result.Content;
+} catch (error) {
+	contentError = error.message;
+	console.error('Content rendering error for', post.id, ':', error);
+}
+---
+
+<BaseLayout title={post.data.title}>
+	<article class="max-w-3xl mx-auto px-4 py-8">
+		<h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+		<p class="text-lg text-gray-300 mb-4">{post.data.description}</p>
+		<p>Post ID: {post.id}</p>
+		<p>Published: {new Date(post.data.pubDate).toLocaleDateString()}</p>
+		
+		<div class="mt-8">
+			{contentError ? (
+				<div class="bg-red-900/20 border border-red-500 text-red-200 p-4 rounded-lg">
+					<h3 class="font-bold">Content Rendering Error:</h3>
+					<p>{contentError}</p>
+				</div>
+			) : (
+				<div class="prose prose-lg prose-invert max-w-none">
+					<Content />
+				</div>
+			)}
+		</div>
+		
+		<div class="mt-8 pt-8 border-t border-gray-700">
+			<a href="/blog" class="text-blue-400 hover:text-blue-300">← Back to all posts</a>
+		</div>
+	</article>
+</BaseLayout>
