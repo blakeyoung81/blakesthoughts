@@ -86,17 +86,66 @@ function Cloud({ topics, radius, onWordHover, onWordLeave }) {
   );
 }
 
+function FlickeringStars() {
+  const starsRef = useRef();
+  
+  useFrame(({ clock }) => {
+    if (!starsRef.current) return;
+    
+    const time = clock.getElapsedTime();
+    
+    // Create subtle flickering effect
+    const flickerIntensity = 0.3 + Math.sin(time * 3) * 0.2 + Math.sin(time * 5.5) * 0.1;
+    const rotationSpeed = time * 0.02;
+    
+    // Apply rotation for gentle movement
+    starsRef.current.rotation.x = rotationSpeed * 0.1;
+    starsRef.current.rotation.y = rotationSpeed * 0.05;
+    starsRef.current.rotation.z = rotationSpeed * 0.02;
+    
+    // Apply flickering by modifying the material opacity
+    if (starsRef.current.material) {
+      starsRef.current.material.opacity = flickerIntensity;
+    }
+  });
+
+  return (
+    <Stars 
+      ref={starsRef}
+      radius={100} 
+      depth={50} 
+      count={8000} 
+      factor={6} 
+      saturation={0} 
+      fade 
+      speed={0.5}
+    />
+  );
+}
+
 function BlakeImage({ imageUrl }) {
   const { viewport } = useThree();
   const scale = viewport.height * 0.9;
+  const meshRef = useRef();
+  
+  useFrame(() => {
+    if (meshRef.current && meshRef.current.material) {
+      // Ensure proper transparency settings
+      meshRef.current.material.transparent = true;
+      meshRef.current.material.alphaTest = 0.01;
+      meshRef.current.material.needsUpdate = true;
+    }
+  });
+  
   return (
     <Image
+      ref={meshRef}
       key={imageUrl}
       url={imageUrl}
       scale={[scale * 0.85, scale, 1]}
       position={[0, -viewport.height * 0.19, 0]}
-      transparent
-      alphaTest={0.1}
+      transparent={true}
+      alphaTest={0.01}
     />
   );
 }
@@ -113,7 +162,15 @@ export function NeuralNetScene({ topics = [] }) {
     };
 
     return (
-        <Canvas gl={{ alpha: true }} camera={{ position: [0, 0, 30], fov: 75 }}>
+        <Canvas 
+          gl={{ 
+            alpha: true, 
+            antialias: true,
+            premultipliedAlpha: false 
+          }} 
+          camera={{ position: [0, 0, 30], fov: 75 }}
+        >
+            <FlickeringStars />
             <BlakeImage imageUrl={imageUrl} />
             {topics.length > 0 && (
               <Cloud 
@@ -123,7 +180,6 @@ export function NeuralNetScene({ topics = [] }) {
                 onWordLeave={handleWordLeave}
               />
             )}
-            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
             <ambientLight intensity={0.6} />
             <pointLight position={[10, 10, 10]} intensity={0.4} />
             <EffectComposer>
