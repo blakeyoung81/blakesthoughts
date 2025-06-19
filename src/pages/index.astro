@@ -62,17 +62,21 @@ const recentProjects = await getCollection("projects")
 					</a>
 				</div>
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-					{recentBlogPosts.map(post => (
-						<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform min-h-[200px] flex flex-col">
-							<h3 class="font-bold text-lg sm:text-xl mb-3 text-white/90 group-hover/card:text-blue-400 transition-colors flex-grow-0">
-								<a href={`/blog/${post.slug}`} class="stretched-link">{post.data.title}</a>
-							</h3>
-							<p class="text-white/60 mb-4 line-clamp-3 text-sm sm:text-base flex-grow">{post.data.description}</p>
-							<time datetime={post.data.pubDate.toISOString()} class="text-xs sm:text-sm text-white/40 font-medium flex-grow-0">
-								{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-							</time>
-						</article>
-					))}
+					{recentBlogPosts.map(post => {
+						// Generate slug the same way as [slug].astro
+						const slug = post.id.replace(/\.(md|mdx)$/, '');
+						return (
+							<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform min-h-[200px] flex flex-col">
+								<h3 class="font-bold text-lg sm:text-xl mb-3 text-white/90 group-hover/card:text-blue-400 transition-colors flex-grow-0">
+									<a href={`/blog/${slug}`} class="stretched-link">{post.data.title}</a>
+								</h3>
+								<p class="text-white/60 mb-4 line-clamp-3 text-sm sm:text-base flex-grow">{post.data.description}</p>
+								<time datetime={post.data.pubDate.toISOString()} class="text-xs sm:text-sm text-white/40 font-medium flex-grow-0">
+									{post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+								</time>
+							</article>
+						);
+					})}
 				</div>
 			</section>
 			
