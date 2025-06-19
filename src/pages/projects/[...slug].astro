@@ -1,76 +1,88 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
   const projectEntries = await getCollection('projects');
   return projectEntries.map(entry => ({
     params: { slug: entry.slug },
-    props: { entry },
   }));
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { slug } = Astro.params;
+const entry = await getEntry('projects', slug);
 
 // Format date
 const formatDate = (date) => {
+  if (!date) return '';
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric', 
     month: 'long', 
     day: 'numeric'
   });
 };
+
+let Content;
+if (entry) {
+	({ Content } = await entry.render());
+}
 ---
 
-<BaseLayout title={entry.data.title}>
-  <article class="max-w-3xl mx-auto">
-    <div class="mb-8">
-      <h1 class="text-4xl font-bold mb-3">{entry.data.title}</h1>
-      <p class="text-zinc-600 dark:text-zinc-400 mb-4">{entry.data.description}</p>
-      
-      <div class="flex flex-wrap gap-2 mb-4">
-        {entry.data.tech.map(tech => (
-          <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
-        ))}
-      </div>
-      
-      <div class="flex flex-wrap gap-4 text-sm">
-        <time datetime={entry.data.pubDate.toISOString()} class="text-zinc-500">
-          {formatDate(entry.data.pubDate)}
-        </time>
+<BaseLayout title={entry?.data.title ?? 'Project not found'}>
+  {entry ? (
+    <article class="max-w-3xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-3">{entry.data.title}</h1>
+        <p class="text-zinc-600 dark:text-zinc-400 mb-4">{entry.data.description}</p>
         
-        <a href={entry.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-          View Repository
-        </a>
+        <div class="flex flex-wrap gap-2 mb-4">
+          {entry.data.tech.map(tech => (
+            <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
+          ))}
+        </div>
         
-        {entry.data.liveDemo && (
-          <a href={entry.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-            Live Demo
+        <div class="flex flex-wrap gap-4 text-sm">
+          <time datetime={entry.data.pubDate.toISOString()} class="text-zinc-500">
+            {formatDate(entry.data.pubDate)}
+          </time>
+          
+          <a href={entry.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+            View Repository
           </a>
-        )}
+          
+          {entry.data.liveDemo && (
+            <a href={entry.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+              Live Demo
+            </a>
+          )}
+        </div>
       </div>
-    </div>
 
-    {entry.data.cover && (
-      <img 
-        src={entry.data.cover} 
-        alt={`Screenshot of ${entry.data.title}`} 
-        class="w-full h-auto rounded-lg mb-8 shadow-md"
-      />
-    )}
+      {entry.data.cover && (
+        <img 
+          src={entry.data.cover} 
+          alt={`Screenshot of ${entry.data.title}`} 
+          class="w-full h-auto rounded-lg mb-8 shadow-md"
+        />
+      )}
 
-    <div class="prose prose-zinc dark:prose-invert max-w-none">
-      <Content />
-    </div>
+      <div class="prose prose-zinc dark:prose-invert max-w-none">
+        <Content />
+      </div>
 
-    <div class="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-      <a href="/projects" class="flex items-center text-accent hover:underline">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" class="mr-1">
-          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-        </svg>
-        Back to all projects
-      </a>
+      <div class="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+        <a href="/projects" class="flex items-center text-accent hover:underline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" class="mr-1">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+          </svg>
+          Back to all projects
+        </a>
+      </div>
+    </article>
+  ) : (
+    <div class="text-center py-20">
+      <h1 class="text-4xl font-bold mb-4">Project Not Found</h1>
+      <p class="text-lg text-gray-300">Sorry, we couldn't find the project you were looking for.</p>
     </div>
-  </article>
+  )}
 </BaseLayout> 
