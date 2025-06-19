@@ -1,7 +1,7 @@
 ---
 title: "RAG‑Powered Step 1 Tutor"
 description: "Local retrieval‑augmented GPT system for rapid concept lookup."
-pubDate: 2025-04-21
+pubDate: "2025-04-21"
 repo: "https://github.com/blakeyoung/rag-med-tutor"
 liveDemo: "https://rag-demo-blake.vercel.app"
 tech: ["Python", "FAISS", "OpenAI API", "Next.js"]

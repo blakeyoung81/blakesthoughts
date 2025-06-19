@@ -1,7 +1,7 @@
 ---
 title: "Little Blake,"
 description: "A nostalgic poem addressed to childhood self, capturing innocence and the desire to preserve precious moments."
-pubDate: 2025-02-03
+pubDate: "2025-02-03"
 tags: ["Poetry", "Meaning"]
 draft: false
 ---
