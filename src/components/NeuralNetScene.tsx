@@ -88,37 +88,45 @@ function Cloud({ topics, radius, onWordHover, onWordLeave }) {
 
 function FlickeringStars() {
   const starsRef = useRef();
+  const [flickerOffsets] = useState(() => Array.from({ length: 5 }, () => Math.random() * 100));
   
   useFrame(({ clock }) => {
     if (!starsRef.current) return;
     
     const time = clock.getElapsedTime();
     
-    // Create subtle flickering effect
-    const flickerIntensity = 0.3 + Math.sin(time * 3) * 0.2 + Math.sin(time * 5.5) * 0.1;
-    const rotationSpeed = time * 0.02;
+    // Create much more dramatic flickering effect with multiple frequencies
+    const flicker1 = Math.sin(time * 4 + flickerOffsets[0]) * 0.3;
+    const flicker2 = Math.sin(time * 7.5 + flickerOffsets[1]) * 0.2;
+    const flicker3 = Math.sin(time * 12 + flickerOffsets[2]) * 0.15;
+    const flicker4 = Math.sin(time * 2.3 + flickerOffsets[3]) * 0.25;
+    const flicker5 = Math.sin(time * 15.7 + flickerOffsets[4]) * 0.1;
+    
+    const combinedFlicker = 0.4 + flicker1 + flicker2 + flicker3 + flicker4 + flicker5;
+    const rotationSpeed = time * 0.015;
     
     // Apply rotation for gentle movement
     starsRef.current.rotation.x = rotationSpeed * 0.1;
     starsRef.current.rotation.y = rotationSpeed * 0.05;
     starsRef.current.rotation.z = rotationSpeed * 0.02;
     
-    // Apply flickering by modifying the material opacity
+    // Apply dramatic flickering by modifying the material opacity
     if (starsRef.current.material) {
-      starsRef.current.material.opacity = flickerIntensity;
+      starsRef.current.material.opacity = Math.max(0.1, Math.min(1.0, combinedFlicker));
+      starsRef.current.material.needsUpdate = true;
     }
   });
 
   return (
     <Stars 
       ref={starsRef}
-      radius={100} 
-      depth={50} 
-      count={8000} 
-      factor={6} 
+      radius={120} 
+      depth={80} 
+      count={12000} 
+      factor={8} 
       saturation={0} 
       fade 
-      speed={0.5}
+      speed={0.3}
     />
   );
 }
@@ -130,9 +138,11 @@ function BlakeImage({ imageUrl }) {
   
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
-      // Ensure proper transparency settings
+      // Force complete transparency for PNG backgrounds
       meshRef.current.material.transparent = true;
-      meshRef.current.material.alphaTest = 0.01;
+      meshRef.current.material.alphaTest = 0.001; // Very low threshold
+      meshRef.current.material.depthWrite = false; // Don't write to depth buffer
+      meshRef.current.material.blending = THREE.NormalBlending;
       meshRef.current.material.needsUpdate = true;
     }
   });
@@ -143,9 +153,10 @@ function BlakeImage({ imageUrl }) {
       key={imageUrl}
       url={imageUrl}
       scale={[scale * 0.85, scale, 1]}
-      position={[0, -viewport.height * 0.19, 0]}
+      position={[0, -viewport.height * 0.19, 5]} // Move slightly forward
       transparent={true}
-      alphaTest={0.01}
+      alphaTest={0.001}
+      depthWrite={false}
     />
   );
 }
@@ -166,7 +177,8 @@ export function NeuralNetScene({ topics = [] }) {
           gl={{ 
             alpha: true, 
             antialias: true,
-            premultipliedAlpha: false 
+            premultipliedAlpha: false,
+            preserveDrawingBuffer: true
           }} 
           camera={{ position: [0, 0, 30], fov: 75 }}
         >
@@ -180,10 +192,10 @@ export function NeuralNetScene({ topics = [] }) {
                 onWordLeave={handleWordLeave}
               />
             )}
-            <ambientLight intensity={0.6} />
-            <pointLight position={[10, 10, 10]} intensity={0.4} />
+            <ambientLight intensity={0.7} />
+            <pointLight position={[10, 10, 10]} intensity={0.5} />
             <EffectComposer>
-                <Bloom luminanceThreshold={0.1} intensity={0.7} levels={9} mipmapBlur />
+                <Bloom luminanceThreshold={0.05} intensity={0.9} levels={9} mipmapBlur />
             </EffectComposer>
         </Canvas>
     );
