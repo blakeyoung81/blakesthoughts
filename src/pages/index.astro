@@ -25,12 +25,41 @@ const recentBlogPosts = allPosts
 	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 	.slice(0, 3);
 
-// Get the 2 most recent projects, with error handling
-const recentProjects = await getCollection("projects")
-	.then(projects => 
-		projects.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()).slice(0, 2)
-	)
-	.catch(() => []);
+// Define Blake's actual projects
+const blakeProjects = [
+	{
+		title: "Ivy Tutoring",
+		description: "Premium tutoring services connecting students with top-tier educators for personalized learning experiences.",
+		url: "https://ivytutoring.net",
+		category: "Education",
+		tech: ["Tutoring", "Education", "Learning"],
+		color: "from-green-500 to-emerald-600"
+	},
+	{
+		title: "Ivy Med",
+		description: "Medical education and preparation resources for aspiring healthcare professionals.",
+		url: "https://ivymed.net", 
+		category: "Medical Education",
+		tech: ["Healthcare", "Medical", "Education"],
+		color: "from-blue-500 to-cyan-600"
+	},
+	{
+		title: "Ivy Sprouts",
+		description: "Early childhood development and educational programs fostering young minds and creativity.",
+		url: "https://ivysprouts.net",
+		category: "Early Education",
+		tech: ["Children", "Development", "Learning"],
+		color: "from-purple-500 to-pink-600"
+	},
+	{
+		title: "Restoring Hope Clinic", 
+		description: "Community healthcare clinic providing compassionate medical care and hope to underserved populations.",
+		url: "https://restoringhopeclinic.org",
+		category: "Healthcare",
+		tech: ["Healthcare", "Community", "Wellness"],
+		color: "from-orange-500 to-red-600"
+	}
+];
 ---
 
 <BaseLayout>
@@ -85,38 +114,59 @@ const recentProjects = await getCollection("projects")
 				<div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
 					<h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-gray-100 to-gray-400 bg-clip-text text-transparent">Featured Projects</h2>
 					<a href="https://github.com/blakeyoung81" target="_blank" rel="noopener noreferrer" class="group/link flex items-center space-x-2 text-purple-400 hover:text-purple-300 font-medium min-h-[44px]">
-						<span>View all</span>
+						<span>View GitHub</span>
 						<svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
 						</svg>
 					</a>
 				</div>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-					{recentProjects && recentProjects.length > 0 ? recentProjects.map(project => (
-						<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform min-h-[200px] flex flex-col">
-							<h3 class="font-bold text-lg sm:text-xl mb-3 text-white/90 group-hover/card:text-purple-400 transition-colors flex-grow-0">
-								<a href={`/projects/${project.slug}`} class="stretched-link">{project.data.title}</a>
-							</h3>
-							<p class="text-white/60 mb-4 sm:mb-6 line-clamp-3 text-sm sm:text-base flex-grow">{project.data.description}</p>
-							<div class="flex flex-wrap gap-2 flex-grow-0">
-								{project.data.tech && project.data.tech.map(tech => (
-									<span class="bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full font-medium">{tech}</span>
-								))}
-							</div>
-						</article>
-					)) : (
-						<div class="col-span-1 md:col-span-2 text-center py-8 sm:py-12">
-							<div class="bg-white/5 border border-white/10 rounded-2xl p-6 sm:p-8">
-								<div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center animate-pulse">
-									<svg class="w-6 h-6 sm:w-8 sm:h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+					{blakeProjects.map(project => (
+						<article class="group/card bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform relative overflow-hidden">
+							<!-- Gradient background accent -->
+							<div class={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${project.color}`}></div>
+							
+							<div class="flex flex-col h-full">
+								<!-- Header -->
+								<div class="flex items-start justify-between mb-4">
+									<div>
+										<h3 class="font-bold text-xl text-white/90 group-hover/card:text-purple-400 transition-colors mb-1">
+											{project.title}
+										</h3>
+										<span class="text-xs font-medium text-white/50 uppercase tracking-wider">{project.category}</span>
+									</div>
+									<svg class="w-5 h-5 text-white/40 group-hover/card:text-purple-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 									</svg>
 								</div>
-								<h3 class="text-lg sm:text-xl font-semibold text-white/70 mb-2">Projects Coming Soon</h3>
-								<p class="text-white/50 text-sm sm:text-base px-4">I'm working on some exciting projects. Check back soon for updates!</p>
+
+								<!-- Description -->
+								<p class="text-white/60 mb-6 line-clamp-3 text-sm leading-relaxed flex-grow">{project.description}</p>
+
+								<!-- Tech Stack -->
+								<div class="flex flex-wrap gap-2 mb-4">
+									{project.tech.map(tech => (
+										<span class={`bg-gradient-to-r ${project.color} bg-opacity-20 text-white/80 text-xs px-3 py-1 rounded-full font-medium`}>
+											{tech}
+										</span>
+									))}
+								</div>
+
+								<!-- Visit Link -->
+								<a 
+									href={project.url} 
+									target="_blank" 
+									rel="noopener noreferrer"
+									class={`inline-flex items-center space-x-2 bg-gradient-to-r ${project.color} hover:shadow-lg text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:-translate-y-0.5 text-sm group/button`}
+								>
+									<span>Visit Site</span>
+									<svg class="w-4 h-4 group-hover/button:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+									</svg>
+								</a>
 							</div>
-						</div>
-					)}
+						</article>
+					))}
 				</div>
 			</section>
 
