@@ -6,14 +6,6 @@ export async function getStaticPaths() {
   try {
     const allPosts = await getCollection('blog').catch(() => []);
     
-    // Try to load poetry with explicit error handling
-    let allPoetry = [];
-    try {
-      allPoetry = await getCollection('poetry');
-    } catch (poetryError) {
-      allPoetry = [];
-    }
-    
     if (!allPosts || allPosts.length === 0) {
       return [];
     }
@@ -29,20 +21,11 @@ export async function getStaticPaths() {
     // If we have real tags, use them
     if (uniqueTags.length > 0) {
       const paths = uniqueTags.map(tag => {
-        let filteredPosts = allPosts.filter(post => 
+        const filteredPosts = allPosts.filter(post => 
           post.data.tags && 
           Array.isArray(post.data.tags) && 
           post.data.tags.includes(tag)
         );
-        
-        // For Poetry topic, also include all poetry collection posts
-        if (tag.toLowerCase() === 'poetry' && allPoetry.length > 0) {
-          const poetryPosts = allPoetry.map(poem => ({
-            ...poem,
-            collection: 'poetry'
-          }));
-          filteredPosts = [...filteredPosts, ...poetryPosts];
-        }
         
         const slug = tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         
@@ -63,28 +46,19 @@ export async function getStaticPaths() {
       'Business': ['business'],
       'Chess': ['chess'],
       'Coding': ['coding'],
-      'Essays': ['essays', 'worth-of-a-soul', 'little-hooks', 'crafting-spirituality', 'jung-synchronicity-fame-meaning', 'not-to-be-classist-but', 'open-letter-to-bernardo-kastrup'],
+      'Essays': ['worth-of-a-soul', 'little-hooks', 'crafting-spirituality', 'jung-synchronicity-fame-meaning', 'not-to-be-classist-but', 'open-letter-to-bernardo-kastrup'],
       'Free Will': ['free-will', 'open-letter-to-bernardo-kastrup'],
-      'Meaning': ['meaning', 'jung-synchronicity-fame-meaning', 'worth-of-a-soul'],
+      'Meaning': ['jung-synchronicity-fame-meaning', 'worth-of-a-soul', 'slurp-on-sunday', 'little-blake'],
       'Music': ['music'],
-      'Philosophy': ['philosophy', 'open-letter-to-bernardo-kastrup', 'free-will', 'jung-synchronicity-fame-meaning'],
-      'Poetry': ['poetry'],
-      'Religion': ['religion', 'crafting-spirituality', 'worth-of-a-soul'],
-      'Software': ['software', 'coding', 'business'],
-      'Truth': ['truth', 'philosophy', 'meaning', 'jung-synchronicity-fame-meaning']
+      'Philosophy': ['philosophy', 'open-letter-to-bernardo-kastrup', 'free-will', 'jung-synchronicity-fame-meaning', 'absurdity-and-yet', 'ode-to-entropy'],
+      'Poetry': ['absurdity-and-yet', 'slurp-on-sunday', 'little-blake', 'ode-to-entropy', 'the-note-between-barbed-wires'],
+      'Religion': ['crafting-spirituality', 'worth-of-a-soul'],
+      'Software': ['coding', 'business'],
+      'Truth': ['philosophy', 'jung-synchronicity-fame-meaning', 'ode-to-entropy', 'the-note-between-barbed-wires']
     };
 
     const fallbackPaths = Object.entries(topicMapping).map(([topicName, postIds]) => {
-      let filteredPosts = allPosts.filter(post => postIds.includes(post.id));
-      
-      // For Poetry topic, also include all poetry collection posts
-      if (topicName === 'Poetry' && allPoetry.length > 0) {
-        const poetryPosts = allPoetry.map(poem => ({
-          ...poem,
-          collection: 'poetry'
-        }));
-        filteredPosts = [...filteredPosts, ...poetryPosts];
-      }
+      const filteredPosts = allPosts.filter(post => postIds.includes(post.id));
       
       const slug = topicName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       
@@ -124,10 +98,10 @@ const { topicName, posts } = Astro.props;
     <!-- Posts grid -->
     <div class="grid gap-8 md:gap-12">
       {posts.map(post => {
-        // Generate slug and URL based on collection
-        const isPoetry = post.collection === 'poetry';
+        // Generate slug and URL - all posts are now in blog collection
         const postSlug = post.id.replace(/\.(md|mdx)$/, '');
-        const postUrl = isPoetry ? `/poetry/${postSlug}` : `/blog/${postSlug}`;
+        const postUrl = `/blog/${postSlug}`;
+        const isPoetry = post.data.tags?.includes('Poetry');
         
         return (
           <article class="group relative">
