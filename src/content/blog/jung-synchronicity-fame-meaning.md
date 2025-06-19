@@ -2,7 +2,7 @@
 title: "Jung, Synchronicity, Fame & the Meaning of It All"
 pubDate: 2024-08-15
 description: "A reflection on meaningful coincidences, public recognition, and finding purpose through Carl Jung's lens."
-tags: ["Philosophy", "Meaning", "Truth"]
+tags: ["Essays", "Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 

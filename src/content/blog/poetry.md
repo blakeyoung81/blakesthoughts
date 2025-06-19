@@ -2,7 +2,7 @@
 title: "Exploring Poetry"
 description: "A sample post about Poetry."
 pubDate: "2023-10-27"
-tags: ["Poetry"]
+tags: ["Essays", "Poetry"]
 ---
 
 # The Language of Healing: Poetry in Medicine

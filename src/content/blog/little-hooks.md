@@ -2,7 +2,7 @@
 title: "Little Hooks"
 pubDate: 2025-02-03
 description: "A reflection on deconstructing faith, the sharpness of reason, and finding new ways to anchor to life, inspired by Sylvia Plath."
-tags: ["Religion", "Faith", "Deconstruction", "Philosophy"]
+tags: ["Essays", "Religion", "Philosophy"]
 draft: false
 ---
 

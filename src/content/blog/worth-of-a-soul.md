@@ -2,7 +2,7 @@
 title: "The Worth of a Soul"
 description: "Exploring the inherent value and dignity of human life through philosophical and religious perspectives."
 pubDate: 2024-06-10
-tags: ["Religion", "Philosophy", "Meaning", "Truth"]
+tags: ["Essays", "Religion", "Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 

@@ -2,7 +2,7 @@
 title: "Not to be classist but"
 pubDate: 2025-02-21
 description: "A critique of the modern myth of billionaires as moral paragons, inspired by Bertrand Russell's observations."
-tags: ["Society", "Economics", "Philosophy"]
+tags: ["Essays", "Philosophy"]
 draft: false
 ---
 

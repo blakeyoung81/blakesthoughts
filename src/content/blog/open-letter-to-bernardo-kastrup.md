@@ -2,7 +2,7 @@
 title: "Open letter to Bernardo Kastrup"
 pubDate: 2025-06-08
 description: "A friendly dispute on the nature of consciousness, arguing for illusionism against analytic idealism."
-tags: ["Philosophy", "Consciousness", "Free Will"]
+tags: ["Essays", "Philosophy", "Free Will"]
 draft: false
 ---
 

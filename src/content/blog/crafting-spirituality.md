@@ -2,7 +2,7 @@
 title: "How do we craft spirituality in an age of engineered experiences?"
 description: "Exploring authentic spiritual practice in a digital world of designed experiences."
 pubDate: 2024-12-15
-tags: ["Religion", "Philosophy", "Meaning", "Truth"]
+tags: ["Essays", "Religion", "Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 
