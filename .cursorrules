@@ -1,0 +1,172 @@
+# Blake's Thoughts - Cursor Rules
+
+You are an expert in Astro, content management, Tailwind CSS, TypeScript, and modern web development for Blake's personal blog and portfolio site.
+
+## Project Overview
+This is Blake's personal blog "Blake's Thoughts" built with Astro, featuring:
+- Blog posts with topic-based categorization
+- Poetry collection
+- Projects showcase  
+- Topic-based navigation with floating tags on homepage
+- Modern, futuristic UI with gradients and glass-morphism effects
+
+## Key Principles
+- Write clean, semantic HTML with accessibility in mind
+- Use Astro's content collections and static site generation features
+- Leverage Tailwind CSS for styling with consistent design system
+- Prioritize performance and Core Web Vitals
+- Maintain SEO best practices
+- Follow responsive design principles
+
+## Project Structure
+
+### Content Collections (`src/content/`)
+- `blog/` - Main blog posts with frontmatter: title, description, pubDate, tags, draft
+- `poetry/` - Poetry collection with same frontmatter structure  
+- `projects/` - Project showcases with additional metadata
+- `config.ts` - Content collection schemas with Zod validation
+
+### Pages Structure (`src/pages/`)
+- `index.astro` - Homepage with floating topic tags and neural network animation
+- `blog/[slug].astro` - Individual blog post pages
+- `poetry/[slug].astro` - Individual poetry post pages  
+- `projects/[slug].astro` - Individual project pages
+- `topics/[slug].astro` - Topic aggregation pages showing all posts by tag
+- `about.astro`, `contact.astro` - Static pages
+
+### Components (`src/components/`)
+- `BaseHead.astro` - SEO and meta tags
+- `Header.astro` - Navigation with futuristic styling
+- `Footer.astro` - Site footer
+- `Logo.astro` - Animated logo component
+- `NeuralNetScene.tsx` - React component for homepage animation
+
+### Layouts (`src/layouts/`)
+- `BaseLayout.astro` - Main layout with header, footer, and navigation
+- `BlogPost.astro` - Specific layout for blog posts and content
+
+## Content Creation Rules
+
+### Blog Posts
+When creating new blog posts:
+1. Use `scripts/new-post.js` script for consistent file creation
+2. Always include required frontmatter:
+   ```yaml
+   ---
+   title: "Post Title"
+   description: "Brief description for SEO and previews"
+   pubDate: YYYY-MM-DD or Date object
+   tags: ["Tag1", "Tag2"] # Must match PNG files in public/ and homepage topics
+   draft: false # Optional, defaults to false
+   ---
+   ```
+3. Tags MUST correspond to PNG files in `public/` directory
+4. Available topic tags: Business, Chess, Coding, Essays, Free Will, Meaning, Music, Philosophy, Poetry, Religion, Software, Truth
+5. Use semantic markdown with proper headings hierarchy
+6. Include meta descriptions that are engaging and SEO-friendly
+
+### Poetry Posts
+- Follow same frontmatter structure as blog posts
+- Focus on Poetry tag but can include Philosophy, Meaning, Truth as secondary tags
+- Keep descriptions poetic but informative
+- Use proper line breaks and formatting for verse structure
+
+### Projects
+- Include additional frontmatter for project metadata:
+  ```yaml
+  technologies: ["Tech1", "Tech2"]
+  githubUrl: "https://github.com/..."
+  liveUrl: "https://..." # Optional
+  featured: true # Optional, for homepage showcase
+  ```
+
+## Topics System
+
+### Topic Pages (`/topics/[slug]`)
+- Automatically generated based on tags in content
+- Must have corresponding PNG file in `public/` directory
+- Show filtered posts for that specific topic
+- Use topic-specific gradient color schemes
+- Include proper navigation back to main blog
+
+### Homepage Topics
+- Floating tags that correspond to PNG files in public/
+- Only topics with both PNG files AND content should appear
+- Clickable links to `/topics/[slug]` pages
+
+## Styling Guidelines
+
+### Design System
+- Use consistent gradient patterns throughout
+- Primary gradients: blue-to-cyan, purple-to-pink, violet-to-purple
+- Glass-morphism effects: `bg-white/5 backdrop-blur-sm border border-white/10`
+- Hover states with scale transforms and shadow enhancements
+- Consistent spacing with Tailwind's scale
+
+### Component Patterns
+- Navigation items with hover gradients and bottom borders
+- Cards with glass-morphism and hover scale effects
+- Buttons with gradient backgrounds and glow effects
+- Text gradients for headers: `bg-gradient-to-r bg-clip-text text-transparent`
+
+### Responsive Design
+- Mobile-first approach
+- Hidden desktop navigation on mobile with hamburger menu
+- Responsive grid layouts for content
+- Touch-friendly button sizes on mobile
+
+## Development Workflow
+
+### Adding New Content
+1. For blog posts: `node scripts/new-post.js "Post Title"`
+2. Ensure tags match available PNG topics
+3. Test topic page functionality after adding posts
+4. Verify responsive design and accessibility
+
+### Topic Management
+1. Only add tags that have corresponding PNG files in `public/`
+2. Update topic fallback mapping in `src/pages/topics/[slug].astro` when adding new topics
+3. Ensure topic colors match design system
+
+### Performance
+- Optimize images in `public/` directory
+- Use Astro's built-in image optimization
+- Minimize JavaScript usage - prefer CSS animations
+- Leverage static site generation for performance
+
+## SEO and Meta
+- Always include proper meta descriptions
+- Use semantic HTML structure
+- Include proper Open Graph tags via BaseHead component
+- Maintain consistent title format: "Page Title - Blake's Thoughts"
+- Include canonical URLs for proper indexing
+
+## Accessibility
+- Use semantic HTML elements
+- Include proper ARIA labels where needed
+- Ensure keyboard navigation works
+- Maintain sufficient color contrast
+- Include alt text for images
+
+## Git Workflow
+- Use descriptive commit messages
+- Group related changes in single commits
+- Push regularly to maintain backup
+- Use conventional commit format when possible
+
+## Testing Checklist
+- [ ] New content renders properly
+- [ ] Topic pages work for all tags used
+- [ ] Responsive design works on mobile/desktop
+- [ ] Navigation links are functional
+- [ ] SEO meta tags are present
+- [ ] Performance is acceptable (test with Lighthouse)
+- [ ] Accessibility guidelines followed
+
+## Common Commands
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `node scripts/new-post.js "Title"` - Create new blog post
+
+When making changes, always consider the impact on the overall design system and user experience. Blake's site emphasizes clean, modern aesthetics with meaningful content organization. 
