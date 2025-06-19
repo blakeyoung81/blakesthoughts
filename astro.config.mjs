@@ -7,7 +7,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://blakesthoughts.vercel.app',    // temporary: use working Vercel domain until custom domain SSL is fixed
+  site: 'https://blakesthoughts.com',    // SSL is now working, back to custom domain
   integrations: [tailwind(), sitemap(), mdx(), react()],
   markdown: {
     syntaxHighlight: 'shiki',
