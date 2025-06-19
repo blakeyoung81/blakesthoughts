@@ -5,18 +5,19 @@ import { NeuralNetScene } from '../components/NeuralNetScene.tsx';
 
 // Fetch all posts and derive a unique list of tags for the hero scene
 const allPosts = await getCollection('blog');
-console.log('All posts count:', allPosts.length);
 
-// Check which posts have tags
-const postsWithTags = allPosts.filter(post => post.data.tags);
-console.log('Posts with tags:', postsWithTags.length);
-console.log('Sample post with tags:', postsWithTags[0]?.data);
-
-const allTags = allPosts.map(post => post.data.tags).filter(tags => tags).flat();
-console.log('All tags found:', allTags);
+// Extract tags more carefully
+const allTags = [];
+allPosts.forEach(post => {
+	if (post.data.tags && Array.isArray(post.data.tags)) {
+		allTags.push(...post.data.tags);
+	}
+});
 
 const topics = [...new Set(allTags)];
-console.log('Final topics array:', topics);
+
+// Fallback to test topics if no tags found
+const finalTopics = topics.length > 0 ? topics : ["Business", "Chess", "Coding", "Essays", "Free Will", "Meaning", "Music", "Philosophy", "Poetry", "Religion", "Software", "Truth"];
 
 // Get the 3 most recent posts for the "Recent Writings" section
 const recentBlogPosts = allPosts
@@ -38,7 +39,7 @@ const recentProjects = await getCollection("projects")
 		
 		<!-- R3F Scene takes full screen -->
 		<div class="absolute inset-0 z-10">
-			<NeuralNetScene client:load topics={topics} />
+			<NeuralNetScene client:load topics={finalTopics} />
 		</div>
 
 		<!-- Title bottom right -->

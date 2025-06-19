@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, Image, Stars } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -7,20 +7,34 @@ import * as THREE from 'three';
 function Word({ topic, onHover, onLeave, ...props }) {
   const ref = useRef();
   
-  const [velocity, sin, cos] = useMemo(() => {
+  const [initialPosition, velocity, sin, cos] = useMemo(() => {
+    // Truly random initial position in 3D space around the sphere
+    const radius = 25 + Math.random() * 10; // Random radius between 25-35
+    const phi = Math.random() * Math.PI; // Random angle 0 to π
+    const theta = Math.random() * 2 * Math.PI; // Random angle 0 to 2π
+    
+    const initialPos = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
     const velocity = new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
     const sin = Math.random() * 2 * Math.PI;
     const cos = Math.random() * 2 * Math.PI;
-    return [velocity, sin, cos];
+    return [initialPos, velocity, sin, cos];
   }, []);
 
-  useFrame(({ clock, mouse }) => {
+  // Set initial position only once
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.position.copy(initialPosition);
+    }
+  }, [initialPosition]);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    
     const time = clock.getElapsedTime() * 0.1;
+    // Just add gentle floating motion to the current position
     ref.current.position.x += Math.sin(time + sin) * 0.01;
     ref.current.position.y += Math.cos(time + cos) * 0.01;
     ref.current.position.z += Math.sin(time + cos) * 0.01;
-    const target = ref.current.position.clone().add(new THREE.Vector3(-mouse.x * 0.5, -mouse.y * 0.5, 0));
-    ref.current.position.lerp(target, 0.01);
   });
 
   const handleClick = () => {
@@ -58,23 +72,16 @@ function Word({ topic, onHover, onLeave, ...props }) {
 }
 
 function Cloud({ topics, radius, onWordHover, onWordLeave }) {
-  const count = topics.length;
   return (
     <>
-      {topics.map((topic, i) => {
-        const phi = Math.acos(-1 + (2 * i) / count);
-        const theta = Math.sqrt(count * Math.PI) * phi;
-        const position = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
-        return (
-          <Word 
-            key={i} 
-            topic={topic} 
-            onHover={onWordHover} 
-            onLeave={onWordLeave} 
-            position={position} 
-          />
-        );
-      })}
+      {topics.map((topic, i) => (
+        <Word 
+          key={`${topic}-${i}`} 
+          topic={topic} 
+          onHover={onWordHover} 
+          onLeave={onWordLeave} 
+        />
+      ))}
     </>
   );
 }
@@ -95,11 +102,6 @@ function BlakeImage({ imageUrl }) {
 }
 
 export function NeuralNetScene({ topics = [] }) {
-    console.log('NeuralNetScene received topics:', topics);
-    console.log('Topics type:', typeof topics);
-    console.log('Topics is array:', Array.isArray(topics));
-    console.log('Topics length:', topics?.length);
-    
     const [imageUrl, setImageUrl] = useState('/Default.png');
 
     const handleWordHover = (topic) => {
