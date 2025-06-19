@@ -3,6 +3,7 @@ title: "Not to be classist but"
 pubDate: 2025-02-21
 description: "A critique of the modern myth of billionaires as moral paragons, inspired by Bertrand Russell's observations."
 tags: ["Society", "Economics", "Philosophy"]
+draft: false
 ---
 
 Bertrand Russell observed that societies often mistake wealth for virtue and power for wisdom. Our age has perfected this illusion, transforming billionaires into moral paragons whose fortunes seem to confirm their brilliance. Yet behind the myth lies a different reality: great fortunes are more often built on inheritance, exploitation, and the manipulation of economic systems than on exceptional talent or hard work. This narrative endures because it feeds our aspirations, making us believe that extreme wealth is both deserved and within reach.

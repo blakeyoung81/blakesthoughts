@@ -3,6 +3,7 @@ title: "How do we craft spirituality in an age of engineered experiences?"
 pubDate: 2025-03-23
 description: "Exploring the paradox of finding authentic connection in technologically-orchestrated religious environments."
 tags: ["Religion", "Spirituality", "Technology"]
+draft: false
 ---
 
 Modern megachurches strike me as paradoxical. We crave primal, authentic connections—moments of awe, sincerity, and profound belonging—yet we meticulously orchestrate environments, shaped by technology and design, intended to make us "feel something." New Heights Church in Fayetteville, Arkansas, managed to achieve this well, with only a few slightly off-putting bugs.

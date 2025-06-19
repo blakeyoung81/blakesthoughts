@@ -3,6 +3,7 @@ title: "Slurp on Sunday"
 pubDate: 2025-02-09
 description: "A short poem about finding quiet moments for oneself."
 tags: ["Mindfulness", "Life", "Stillness"]
+draft: false
 ---
 
 I keep doors open

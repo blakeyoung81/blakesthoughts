@@ -3,6 +3,7 @@ title: "Little Hooks"
 pubDate: 2025-02-03
 description: "A reflection on deconstructing faith, the sharpness of reason, and finding new ways to anchor to life, inspired by Sylvia Plath."
 tags: ["Religion", "Faith", "Deconstruction", "Philosophy"]
+draft: false
 ---
 
 In Sylvia Plath's "Tulips," the poet describes a hospital bed, bright red flowers, and those little smiling hooks that tether her to what Shakespeare once called "this mortal coil." Plath craved freedom from consciousness—a total erasure that would relieve her of every burden. Only near the end, when the "redness" of life offered her a way back, did she reclaim her sense of identity.

@@ -3,6 +3,7 @@ title: "Open letter to Bernardo Kastrup"
 pubDate: 2025-06-08
 description: "A friendly dispute on the nature of consciousness, arguing for illusionism against analytic idealism."
 tags: ["Philosophy", "Consciousness", "Free Will"]
+draft: false
 ---
 
 Bernardo, I remain an avid admirer of your work—especially your stirring defense of free will—but on consciousness I stand firmly in the illusionist camp. To me, consciousness is not a place or a time, nor a luminous theater tucked behind the eyes; it is the upshot of dynamic, ever-shifting processes: neural populations competing for bandwidth, updating predictive models of the body and world, tagging salient states with quick-and-dirty labels, and weaving those tags into a narrative we can report to ourselves and to one another. The vivid "inner light" we speak of is nothing more than the brain reading its own compressed labels for pain, red, self and so forth—handy shortcuts that evolution hit upon because they guide adaptive behavior and social coordination at minimal metabolic cost.

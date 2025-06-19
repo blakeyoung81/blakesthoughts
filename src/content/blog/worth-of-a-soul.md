@@ -3,6 +3,7 @@ title: "Worth of a soul is great in the eyes of God"
 pubDate: 2025-02-28
 description: "A philosophical exploration of human value, judgment, and the complexities of character in a deterministic universe."
 tags: ["Philosophy", "Religion", "Determinism", "Ethics"]
+draft: false
 ---
 
 When people think of the human body, they often envision the head and heart—particularly the head—as the central locus of control, identity, and essence. Yet, in truth, the most distal parts—the pinky toe, for instance—are just as human, just as corporeal, and just as integral to identity as the mind itself. Yet, we struggle to see it that way. We seem incapable of appreciating the body in its entirety as equally fundamental to who we are.

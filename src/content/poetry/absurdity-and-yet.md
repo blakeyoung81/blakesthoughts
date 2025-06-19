@@ -3,6 +3,7 @@ title: "Absurdity, and Yet—"
 pubDate: 2025-04-20
 description: "A poem about finding meaning and music in the madness of existence."
 tags: ["Absurdism", "Existentialism", "Life"]
+draft: false
 ---
 
 Life walks in on tiptoe,
