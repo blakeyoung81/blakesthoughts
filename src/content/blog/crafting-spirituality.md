@@ -1,8 +1,8 @@
 ---
 title: "How do we craft spirituality in an age of engineered experiences?"
-pubDate: 2025-03-23
-description: "Exploring the paradox of finding authentic connection in technologically-orchestrated religious environments."
-tags: ["Religion", "Spirituality", "Technology"]
+description: "Exploring authentic spiritual practice in a digital world of designed experiences."
+pubDate: 2024-12-15
+tags: ["Religion", "Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 

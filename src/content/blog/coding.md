@@ -2,7 +2,7 @@
 title: "Exploring Coding"
 description: "A sample post about Coding."
 pubDate: "2023-10-27"
-tags: ["Coding"]
+tags: ["Coding", "Software"]
 ---
 
 # Code as Medicine: The Healing Power of Programming

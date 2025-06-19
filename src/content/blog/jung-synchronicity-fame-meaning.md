@@ -1,8 +1,8 @@
 ---
-title: "Jung's synchronicity, fame, and meaning"
-pubDate: 2025-02-20
-description: "A reflection on altruism, fame, and the search for meaning, bridging Jungian synchronicity with scientific determinism."
-tags: ["Philosophy", "Psychology", "Meaning"]
+title: "Jung, Synchronicity, Fame & the Meaning of It All"
+pubDate: 2024-08-15
+description: "A reflection on meaningful coincidences, public recognition, and finding purpose through Carl Jung's lens."
+tags: ["Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 

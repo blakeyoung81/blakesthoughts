@@ -1,8 +1,8 @@
 ---
-title: "Worth of a soul is great in the eyes of God"
-pubDate: 2025-02-28
-description: "A philosophical exploration of human value, judgment, and the complexities of character in a deterministic universe."
-tags: ["Philosophy", "Religion", "Determinism", "Ethics"]
+title: "The Worth of a Soul"
+description: "Exploring the inherent value and dignity of human life through philosophical and religious perspectives."
+pubDate: 2024-06-10
+tags: ["Religion", "Philosophy", "Meaning", "Truth"]
 draft: false
 ---
 

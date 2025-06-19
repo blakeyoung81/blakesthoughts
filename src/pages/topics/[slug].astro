@@ -3,41 +3,187 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  // Using a Set to ensure unique tags
-  const allPosts = await getCollection('blog');
-  const uniqueTags = new Set(allPosts.map(post => post.data.tags || []).flat());
+  try {
+    console.log('Topics: Starting getStaticPaths...');
+    const allPosts = await getCollection('blog').catch(() => []);
+    console.log('Topics: Posts loaded:', allPosts.length);
+    
+    if (!allPosts || allPosts.length === 0) {
+      console.log('Topics: No posts found, returning empty paths');
+      return [];
+    }
 
-  return Array.from(uniqueTags).map(tag => {
-    const filteredPosts = allPosts.filter(post => post.data.tags?.includes(tag));
-    return {
-      params: { slug: tag.toLowerCase().replace(/ /g, '-') },
-      props: { 
-        topicName: tag,
-        posts: filteredPosts 
-      },
+    // Debug first few posts
+    console.log('Topics: Checking first 3 posts...');
+    allPosts.slice(0, 3).forEach((post, index) => {
+      console.log(`Topics: Post ${index} (${post.id}):`, {
+        title: post.data.title,
+        tags: post.data.tags,
+        tagType: typeof post.data.tags,
+        isArray: Array.isArray(post.data.tags),
+        allKeys: Object.keys(post.data)
+      });
+    });
+
+    // Try to get tags from content first
+    const allTags = allPosts
+      .map(post => {
+        const tags = post.data.tags;
+        console.log(`Topics: Post ${post.id} tags:`, tags);
+        return tags || [];
+      })
+      .flat()
+      .filter(tag => tag && typeof tag === 'string' && tag.trim() !== '');
+    
+    console.log('Topics: All tags found:', allTags);
+    
+    const uniqueTags = [...new Set(allTags)];
+    console.log('Topics: Unique tags:', uniqueTags);
+    
+    // If we have real tags, use them
+    if (uniqueTags.length > 0) {
+      console.log('Topics: Using real tags from content');
+      const paths = uniqueTags.map(tag => {
+        const filteredPosts = allPosts.filter(post => 
+          post.data.tags && 
+          Array.isArray(post.data.tags) && 
+          post.data.tags.includes(tag)
+        );
+        
+        const slug = tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        console.log(`Topics: Tag "${tag}" -> slug "${slug}" with ${filteredPosts.length} posts`);
+        
+        return {
+          params: { slug },
+          props: { 
+            topicName: tag,
+            posts: filteredPosts 
+          },
+        };
+      });
+      
+      console.log('Topics: Generated paths from real tags:', paths.length);
+      return paths;
+    }
+
+    // Fallback: Create comprehensive coverage for all PNG topics
+    console.log('Topics: No valid tags found, using intelligent mapping');
+    
+    // Map post IDs to topic categories based on content and naming
+    const topicMapping = {
+      'Business': ['business'],
+      'Chess': ['chess'],
+      'Coding': ['coding'],
+      'Essays': ['essays'],
+      'Free Will': ['free-will', 'open-letter-to-bernardo-kastrup'],
+      'Meaning': ['meaning', 'jung-synchronicity-fame-meaning', 'worth-of-a-soul'],
+      'Music': ['music'],
+      'Philosophy': ['philosophy', 'open-letter-to-bernardo-kastrup', 'free-will', 'jung-synchronicity-fame-meaning'],
+      'Poetry': ['poetry'],
+      'Religion': ['religion', 'crafting-spirituality', 'worth-of-a-soul'],
+      'Software': ['software', 'coding', 'business'],
+      'Truth': ['truth', 'philosophy', 'meaning', 'jung-synchronicity-fame-meaning']
     };
-  });
+
+    const fallbackPaths = Object.entries(topicMapping).map(([topicName, postIds]) => {
+      const filteredPosts = allPosts.filter(post => postIds.includes(post.id));
+      const slug = topicName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      
+      console.log(`Topics: Fallback mapping "${topicName}" -> slug "${slug}" with ${filteredPosts.length} posts`);
+      
+      return {
+        params: { slug },
+        props: { 
+          topicName: topicName,
+          posts: filteredPosts 
+        },
+      };
+    });
+    
+    console.log('Topics: Generated fallback paths:', fallbackPaths.length);
+    return fallbackPaths;
+    
+  } catch (error) {
+    console.error('Topics: Error in getStaticPaths:', error);
+    return [];
+  }
 }
 
-const { slug } = Astro.params;
 const { topicName, posts } = Astro.props;
-
-// Capitalize the first letter of the topic
-const topicTitle = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
 ---
 
 <BaseLayout title={`Topic: ${topicName}`}>
-  <div class="container mx-auto px-6 py-12">
-    <h1 class="text-4xl font-bold mb-2">Topic: <span class="capitalize">{topicName}</span></h1>
-    <p class="text-xl text-gray-600 mb-8">Posts related to this topic.</p>
+  <div class="max-w-5xl mx-auto px-6 py-12">
+    <!-- Hero section with topic name -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
+        {topicName}
+      </h1>
+      <p class="text-xl text-gray-300 mb-6">
+        {posts.length} post{posts.length === 1 ? '' : 's'} about {topicName.toLowerCase()}
+      </p>
+      <div class="w-32 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"></div>
+    </div>
 
-    <div class="grid gap-8">
-      {posts.map(post => (
-        <a href={`/blog/${post.slug}/`} class="block p-6 border rounded-lg hover:shadow-lg transition-shadow duration-200">
-          <h2 class="text-2xl font-bold mb-2">{post.data.title}</h2>
-          <p class="text-gray-700">{post.data.description}</p>
-        </a>
-      ))}
+    <!-- Posts grid -->
+    <div class="grid gap-8 md:gap-12">
+      {posts.map(post => {
+        // Generate slug from post.id (same logic as blog posts)
+        const postSlug = post.id.replace(/\.(md|mdx)$/, '');
+        return (
+          <article class="group relative">
+            <a href={`/blog/${postSlug}`} class="block p-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:border-white/20 hover:bg-white/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+              <!-- Post header -->
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex-1">
+                  <h2 class="text-2xl font-bold mb-3 text-white group-hover:text-purple-300 transition-colors">
+                    {post.data.title}
+                  </h2>
+                  <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                    {post.data.description}
+                  </p>
+                </div>
+                <!-- Arrow icon -->
+                <div class="ml-6 opacity-60 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                  <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Post meta -->
+              <div class="flex items-center justify-between text-sm">
+                <time class="text-gray-400">
+                  {new Date(post.data.pubDate).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </time>
+                
+                <!-- Tags -->
+                <div class="flex flex-wrap gap-2">
+                  {post.data.tags?.map(tag => (
+                    <span class="px-3 py-1 text-xs bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- Back to blog link -->
+    <div class="mt-16 text-center">
+      <a href="/blog" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to all posts
+      </a>
     </div>
   </div>
 </BaseLayout>

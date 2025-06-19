@@ -2,7 +2,10 @@
 title: "Exploring Philosophy"
 description: "A sample post about Philosophy."
 pubDate: "2023-10-27"
-tags: ["Philosophy"]
+tags: 
+  - Philosophy
+  - Truth
+  - Meaning
 ---
 
 # Philosophy in the Clinic: Why Ancient Questions Matter in Modern Medicine

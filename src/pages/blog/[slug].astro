@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => {
+		// Generate slug from the post.id (filename without extension)
+		const slug = post.id.replace(/\.(md|mdx)$/, '');
+		return {
+			params: { slug },
+			props: { post },
+		};
+	});
+}
+
+const { post } = Astro.props;
+
+let Content;
+let renderError = null;
+
+try {
+	// Try the render method first
+	if (post && typeof post.render === 'function') {
+		const rendered = await post.render();
+		Content = rendered.Content;
+	} else if (post && post.rendered && post.rendered.html) {
+		// Fallback to pre-rendered HTML
+		Content = () => ({ __html: post.rendered.html });
+	} else {
+		renderError = "No content available";
+	}
+} catch (error) {
+	renderError = error.message;
+}
+---
+
+<BaseLayout title={post?.data?.title ?? 'Blog Post'}>
+	<article class="max-w-3xl mx-auto px-4 py-8">
+		<h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+		<p class="text-lg text-gray-300 mb-4">{post.data.description}</p>
+		<p class="text-sm text-gray-500">Published: {new Date(post.data.pubDate).toLocaleDateString()}</p>
+		
+		<div class="mt-8">
+			{renderError ? (
+				<div class="bg-red-900/20 border border-red-500 text-red-200 p-4 rounded-lg">
+					<h3 class="font-bold">Content Rendering Error:</h3>
+					<p>{renderError}</p>
+				</div>
+			) : Content && post.rendered && post.rendered.html ? (
+				<div class="prose prose-lg prose-invert max-w-none" set:html={post.rendered.html}></div>
+			) : (
+				<div class="prose prose-lg prose-invert max-w-none">
+					<Content />
+				</div>
+			)}
+		</div>
+		
+		<div class="mt-8 pt-8 border-t border-gray-700">
+			<a href="/blog" class="text-blue-400 hover:text-blue-300">← Back to all posts</a>
+		</div>
+	</article>
+</BaseLayout>

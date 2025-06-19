@@ -2,7 +2,7 @@
 title: "Exploring Free Will"
 description: "A sample post about Free Will."
 pubDate: "2023-10-27"
-tags: ["Free Will"]
+tags: ["Free Will", "Philosophy", "Truth"]
 ---
 
 # The Illusion of Choice: Free Will in Medicine and Life

@@ -2,7 +2,7 @@
 title: "Exploring Business"
 description: "A sample post about Business."
 pubDate: "2023-10-27"
-tags: ["Business"]
+tags: ["Business", "Software"]
 ---
 
 # The Intersection of Business and Medicine
