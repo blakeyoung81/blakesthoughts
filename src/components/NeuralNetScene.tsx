@@ -96,7 +96,8 @@ function BlakeImage({ imageUrl }) {
       scale={[scale * 0.85, scale, 1]}
       position={[0, -viewport.height * 0.19, 0]}
       transparent
-      alphaTest={0.1}
+      opacity={0.7}
+      material-transparent={true}
     />
   );
 }
