@@ -4,20 +4,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allBlogPosts = await getCollection('blog');
 
-const postsWithSlug = allBlogPosts.map(post => ({
+// Add slug to each post since getCollection doesn't provide it automatically
+const postsWithSlugs = allBlogPosts.map(post => ({
 	...post,
-	slug: post.slug,
+	slug: post.id.replace('.md', '').replace('.mdx', '')
 }));
 
-// Filter posts based on environment
-const filteredPosts = postsWithSlug.filter(post => 
-	import.meta.env.PROD ? !post.data.draft : true
-);
-
-// Sort posts by date in descending order
-const sortedPosts = filteredPosts.sort(
-	(a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
-);
+// Filter posts based on environment and sort by date in descending order
+const sortedPosts = postsWithSlugs
+	.filter(post => import.meta.env.PROD ? !post.data.draft : true)
+	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 // Format date function
 const formatDate = (date) => {

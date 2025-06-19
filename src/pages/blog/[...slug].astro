@@ -3,47 +3,49 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-	const blogEntries = await getCollection('blog');
-	return blogEntries.map(entry => ({
-		params: { slug: entry.slug },
-		props: { entry },
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
+		props: post,
 	}));
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+const post = Astro.props;
 
-// Format date
-const formatDate = (date) => {
-	return new Date(date).toLocaleDateString('en-US', {
-		year: 'numeric', 
-		month: 'long', 
-		day: 'numeric'
-	});
-};
+let Content;
+let contentError = null;
+
+try {
+	const result = await post.render();
+	Content = result.Content;
+} catch (error) {
+	contentError = error.message;
+	console.error('Content rendering error for', post.id, ':', error);
+}
 ---
 
-<BaseLayout title={entry.data.title}>
-	<article class="max-w-3xl mx-auto">
-		<div class="mb-8">
-			<h1 class="text-4xl font-bold mb-3">{entry.data.title}</h1>
-			<p class="text-zinc-600 dark:text-zinc-400 mb-4">{entry.data.description}</p>
-			<time datetime={entry.data.pubDate.toISOString()} class="text-sm text-zinc-500">
-				{formatDate(entry.data.pubDate)}
-			</time>
+<BaseLayout title={post.data.title}>
+	<article class="max-w-3xl mx-auto px-4 py-8">
+		<h1 class="text-4xl font-bold mb-4">{post.data.title}</h1>
+		<p class="text-lg text-gray-300 mb-4">{post.data.description}</p>
+		<p>Post ID: {post.id}</p>
+		<p>Published: {new Date(post.data.pubDate).toLocaleDateString()}</p>
+		
+		<div class="mt-8">
+			{contentError ? (
+				<div class="bg-red-900/20 border border-red-500 text-red-200 p-4 rounded-lg">
+					<h3 class="font-bold">Content Rendering Error:</h3>
+					<p>{contentError}</p>
+				</div>
+			) : (
+				<div class="prose prose-lg prose-invert max-w-none">
+					<Content />
+				</div>
+			)}
 		</div>
-
-		<div class="prose prose-zinc dark:prose-invert max-w-none">
-			<Content />
-		</div>
-
-		<div class="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
-			<a href="/blog" class="flex items-center text-accent hover:underline">
-				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" class="mr-1">
-					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-				</svg>
-				Back to all posts
-			</a>
+		
+		<div class="mt-8 pt-8 border-t border-gray-700">
+			<a href="/blog" class="text-blue-400 hover:text-blue-300">← Back to all posts</a>
 		</div>
 	</article>
 </BaseLayout>
