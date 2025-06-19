@@ -1,7 +1,7 @@
 ---
 title: "Slurp on Sunday"
 description: "A contemplative poem about finding peace in small moments and breathing space."
-pubDate: "2025-02-09"
+pubDate: 2025-02-09
 tags: ["Poetry", "Meaning"]
 draft: false
 ---

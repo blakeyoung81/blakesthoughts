@@ -1,7 +1,7 @@
 ---
 title: "Ode to Entropy"
 description: "A reflection on the inevitable disorder that governs both our bodies and the universe."
-pubDate: "2025-04-15"
+pubDate: 2025-04-15
 tags: ["Poetry", "Philosophy", "Truth"]
 draft: false
 ---

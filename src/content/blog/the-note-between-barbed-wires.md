@@ -1,7 +1,7 @@
 ---
 title: "The Note Between Barbed Wires – Auschwitz"
 description: "A poem capturing a fleeting moment of human connection and defiance in the darkest of places."
-pubDate: "2025-02-27"
+pubDate: 2025-02-27
 tags: ["Poetry", "Truth"]
 draft: false
 ---
