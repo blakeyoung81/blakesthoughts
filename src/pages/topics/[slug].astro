@@ -1,3 +1,4 @@
+---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -23,6 +24,7 @@ const { topicName, posts } = Astro.props;
 
 // Capitalize the first letter of the topic
 const topicTitle = slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ');
+---
 
 <BaseLayout title={`Topic: ${topicName}`}>
   <div class="container mx-auto px-6 py-12">
