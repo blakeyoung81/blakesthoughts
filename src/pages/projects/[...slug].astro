@@ -1,3 +1,4 @@
+---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -20,6 +21,7 @@ const formatDate = (date) => {
     day: 'numeric'
   });
 };
+---
 
 <BaseLayout title={entry.data.title}>
   <article class="max-w-3xl mx-auto">
