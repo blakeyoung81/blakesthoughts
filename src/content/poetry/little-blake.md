@@ -1,8 +1,8 @@
 ---
 title: "Little Blake,"
+description: "A nostalgic poem addressed to childhood self, capturing innocence and the desire to preserve precious moments."
 pubDate: 2025-02-03
-description: "A poem to a younger self, a plea to hold onto the magic of childhood."
-tags: ["Childhood", "Nostalgia", "Memory"]
+tags: ["Poetry", "Meaning"]
 draft: false
 ---
 
@@ -22,6 +22,7 @@ let that helmet tilt, just a little
 further over your shining green eyes.
 
 Keep your T-shirt untucked
+
 Let's pretend
 this day never ends.
 
@@ -32,6 +33,5 @@ around your sneakers
 until dusk swallows the sky.
 
 I'll study your footprints
-while you keep teaching the world 
-
+while you keep teaching the world
 how to dream. 

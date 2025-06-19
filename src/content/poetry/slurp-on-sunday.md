@@ -1,8 +1,8 @@
 ---
 title: "Slurp on Sunday"
+description: "A contemplative poem about finding peace in small moments and breathing space."
 pubDate: 2025-02-09
-description: "A short poem about finding quiet moments for oneself."
-tags: ["Mindfulness", "Life", "Stillness"]
+tags: ["Poetry", "Meaning"]
 draft: false
 ---
 
@@ -10,6 +10,7 @@ I keep doors open
 with no one behind me,
 just so stray sunbeams
 slip through the gap.
+
 I trace chipped murals
 like braille,
 feeling for lost daydreams

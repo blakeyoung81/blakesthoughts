@@ -1,8 +1,8 @@
 ---
 title: "Absurdity, and Yet—"
+description: "A poem about finding meaning and friendship in life's beautiful absurdity."
 pubDate: 2025-04-20
-description: "A poem about finding meaning and music in the madness of existence."
-tags: ["Absurdism", "Existentialism", "Life"]
+tags: ["Poetry", "Philosophy", "Meaning"]
 draft: false
 ---
 
