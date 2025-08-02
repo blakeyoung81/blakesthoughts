@@ -19,7 +19,6 @@ The holiday template becomes irrelevant when every ordinary Friday carries the s
 
 ![Additional Template](/1.png)
 
-![National Girlfriend Day Template](/National-Girlfriend-Day.png)
 
 ---
 
