@@ -25,6 +25,8 @@ That being said... it never hurts to have a template.
 
 ![Additional Template](/1.png)
 
+![Additional Template 2](/2.png)
+
 ---
 
 *Happy National Girlfriend Day to all the girlfriends out there who deserve better than last-minute gas station flowers and hastily deleted browser histories. You're the real MVPs.*
