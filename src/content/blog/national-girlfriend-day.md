@@ -1,6 +1,6 @@
 ---
 title: "National Girlfriend Day: A Man's Guide to the Perfect Day"
-description: "A satirical take on what National Girlfriend Day should really look like, from a man's perspective who's still figuring it all out."
+description: "A take on what National Girlfriend Day should really look like, from a man's perspective who's still figuring it all out."
 pubDate: 2025-08-01
 tags: ["Essays", "Philosophy", "Truth", "National Girlfriend Day"]
 ---
@@ -22,6 +22,8 @@ That being said... it never hurts to have a template.
 ![National Girlfriend Day Template](/National-Girlfriend-Day.png)
 
 *Because sometimes even the most romantic among us need a little guidance.*
+
+![Additional Template](/1.png)
 
 ---
 
