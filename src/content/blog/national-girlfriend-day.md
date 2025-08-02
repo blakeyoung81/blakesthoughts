@@ -23,4 +23,4 @@ The holiday template becomes irrelevant when every ordinary Friday carries the s
 
 ---
 
-*Here's to all the girlfriends out there deserving far more than last-minute gas station flowers. You're the true MVPs.*
+*We all deserve far more than last-minute gas station flowers.*
