@@ -21,11 +21,15 @@ That being said... I decided to create a template that might be good to follow. 
 
 The template becomes irrelevant when you're already working as hard as possible to make every ordinary Tuesday feel like the kind of day worth remembering. When you're putting that level of intention into every conversation, every shared silence, every small gesture that no one else will ever witness—that's when you realize Harold's holiday was solving the wrong problem entirely.
 
-![National Girlfriend Day Template](/National-Girlfriend-Day.png)
+
 
 *A template for those still learning that the real work happens in all the days that don't have names.*
 
 ![Additional Template](/1.png)
+
+
+
+![National Girlfriend Day Template](/National-Girlfriend-Day.png)
 
 ---
 
