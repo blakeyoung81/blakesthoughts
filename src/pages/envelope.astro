@@ -243,20 +243,20 @@ const description = "Something magical awaits...";
             color: white;
         }
 
-        /* Video Reveal */
-        .video-reveal {
+        /* GIF Reveal */
+        .gif-reveal {
             display: none;
             animation: fadeIn 1s ease-in;
-            max-width: 800px;
+            max-width: 600px;
             width: 100%;
             margin: 0 auto;
         }
 
-        .video-reveal.active {
+        .gif-reveal.active {
             display: block;
         }
 
-        .video-container {
+        .gif-container {
             position: relative;
             width: 100%;
             border-radius: 20px;
@@ -265,7 +265,7 @@ const description = "Something magical awaits...";
             margin-bottom: 1.5rem;
         }
 
-        .video-container video {
+        .gif-container img {
             width: 100%;
             height: auto;
             display: block;
@@ -370,7 +370,7 @@ const description = "Something magical awaits...";
                 padding: 0 1rem;
             }
 
-            .video-container {
+            .gif-container {
                 border-radius: 12px;
             }
         }
@@ -420,18 +420,14 @@ const description = "Something magical awaits...";
             Collect all three dates to reveal the surprise...
         </div>
 
-        <!-- Video Reveal -->
-        <div class="video-reveal" id="videoReveal">
+        <!-- GIF Reveal -->
+        <div class="gif-reveal" id="gifReveal">
+            <div class="gif-container">
+                <img src="/final-invitation.gif" alt="Your Special Invitation" />
+            </div>
             <h2 class="reveal-message">
                 Your Special Invitation Awaits! 💝
             </h2>
-            <div class="video-container">
-                <video id="invitationVideo" controls autoplay playsinline>
-                    <source src="/final-invitation.mov" type="video/quicktime">
-                    <source src="/final-invitation.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
         </div>
     </div>
 
@@ -460,7 +456,7 @@ const description = "Something magical awaits...";
             const state = getState();
             const envelope = document.getElementById('envelope');
             const progressText = document.getElementById('progressText');
-            const videoReveal = document.getElementById('videoReveal');
+            const gifReveal = document.getElementById('gifReveal');
             const ticketsContainer = document.getElementById('ticketsContainer');
 
             let revealedCount = 0;
@@ -492,7 +488,7 @@ const description = "Something magical awaits...";
                     progressText.style.display = 'none';
                     
                     setTimeout(() => {
-                        videoReveal.classList.add('active');
+                        gifReveal.classList.add('active');
                         createConfetti();
                     }, 800);
                 }, 1500);
