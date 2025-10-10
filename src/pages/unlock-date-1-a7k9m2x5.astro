@@ -1,0 +1,184 @@
+---
+// Unlock page for date 1 - secure token: a7k9m2x5
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date 1 Unlocked! 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .unlock-container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: #764ba2;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .continue-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .sparkles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkles" id="sparkles"></div>
+    
+    <div class="unlock-container">
+        <div class="success-icon">🎉</div>
+        <h1>First Date Unlocked!</h1>
+        <p class="message">
+            Congratulations on completing our first date! 💕<br>
+            You've scratched off ticket #1.<br>
+            <br>
+            <strong>Two more dates to unlock the surprise...</strong>
+        </p>
+        <a href="/envelope" class="continue-btn">See Your Progress</a>
+    </div>
+
+    <script>
+        // Update state
+        const STATE_KEY = 'envelope_progress';
+        
+        function updateState() {
+            let state = localStorage.getItem(STATE_KEY);
+            state = state ? JSON.parse(state) : {
+                ticket1: false,
+                ticket2: false,
+                ticket3: false,
+                complete: false
+            };
+            
+            state.ticket1 = true;
+            localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        }
+
+        // Create sparkle effect
+        function createSparkles() {
+            const container = document.getElementById('sparkles');
+            const emojis = ['✨', '💖', '💕', '💝', '🌟', '💗', '⭐'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'absolute';
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.top = '-50px';
+                    sparkle.style.fontSize = '24px';
+                    sparkle.style.animation = 'fall 3s linear forwards';
+                    sparkle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    container.appendChild(sparkle);
+                    
+                    setTimeout(() => sparkle.remove(), 3000);
+                }, i * 60);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    top: 100%;
+                    transform: translateX(${Math.random() * 200 - 100}px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.addEventListener('load', () => {
+            updateState();
+            createSparkles();
+        });
+    </script>
+</body>
+</html>
+
