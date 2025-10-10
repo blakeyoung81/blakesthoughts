@@ -162,14 +162,14 @@ function BlakeImage({ imageUrl }) {
 }
 
 export function NeuralNetScene({ topics = [] }) {
-    const [imageUrl, setImageUrl] = useState('/Default.png');
+    const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
 
     const handleWordHover = (topic) => {
-      setImageUrl(`/${topic}.png`);
+      setImageUrl(`/images/topics/${topic}.png`);
     };
 
     const handleWordLeave = () => {
-      setImageUrl('/Default.png');
+      setImageUrl('/images/topics/Default.png');
     };
 
     return (

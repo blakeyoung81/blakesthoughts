@@ -48,17 +48,48 @@ The script will prompt for additional information like description, repository U
 ## 🧞 Project Structure
 
 ```
-├── public/             # Static assets
-│   └── fonts/          # Web fonts
+├── public/                    # Static assets (served from root)
+│   ├── fonts/                 # Web fonts (Atkinson)
+│   ├── images/
+│   │   ├── topics/            # Topic PNG icons (Business, Chess, etc.)
+│   │   ├── placeholders/      # Blog placeholder images
+│   │   └── blog/              # Blog-specific images
+│   ├── favicon.svg            # Site favicon
 ├── src/
-│   ├── components/     # Reusable UI components
-│   ├── content/        # Content collections (blog, poetry, projects)
-│   ├── layouts/        # Page layouts
-│   ├── pages/          # Page routes and templates
-│   └── styles/         # Global styles
-├── scripts/            # Utility scripts
-└── astro.config.mjs    # Astro configuration
+│   ├── components/            # Reusable UI components
+│   │   ├── BaseHead.astro     # SEO and meta tags
+│   │   ├── Header.astro       # Navigation header
+│   │   ├── Footer.astro       # Site footer
+│   │   ├── Logo.astro         # Animated logo
+│   │   └── NeuralNetScene.tsx # 3D topic visualization
+│   ├── content/               # Content collections
+│   │   ├── blog/              # Blog posts (.md, .mdx)
+│   │   ├── poetry/            # Poetry posts
+│   │   ├── projects/          # Project showcases
+│   │   └── config.ts          # Content schemas
+│   ├── layouts/               # Page layouts
+│   │   ├── BaseLayout.astro   # Main layout wrapper
+│   │   └── BlogPost.astro     # Blog post layout
+│   ├── pages/                 # Page routes
+│   │   ├── blog/              # Blog pages
+│   │   ├── poetry/            # Poetry pages
+│   │   ├── projects/          # Project pages
+│   │   ├── topics/            # Topic aggregation pages
+│   │   ├── index.astro        # Homepage
+│   │   ├── about.astro        # About page
+│   │   └── contact.astro      # Contact page
+│   ├── styles/                # Global styles
+│   │   └── global.css         # Global CSS
+│   └── consts.ts              # Site constants
+├── scripts/                   # Utility scripts
+│   └── new-post.js            # Create new content script
+├── .cursorrules               # AI assistant guidelines
+├── astro.config.mjs           # Astro configuration
+├── tailwind.config.cjs        # Tailwind CSS configuration
+└── tsconfig.json              # TypeScript configuration
 ```
+
+See [ORGANIZATION.md](./ORGANIZATION.md) for detailed file organization guidelines.
 
 ## 🔧 Configuration
 
