@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, Image, Stars } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
+import { ImageLoader, isMobileDevice, getOptimizedImageSize } from '../utils/imageOptimization';
 
 function Word({ topic, onHover, onLeave, ...props }) {
   const ref = useRef();
@@ -88,31 +89,30 @@ function Cloud({ topics, radius, onWordHover, onWordLeave }) {
 
 function FlickeringStars() {
   const starsRef = useRef();
-  const [flickerOffsets] = useState(() => Array.from({ length: 5 }, () => Math.random() * 100));
+  const [flickerOffsets] = useState(() => Array.from({ length: 3 }, () => Math.random() * 100));
+  const isMobile = isMobileDevice();
   
   useFrame(({ clock }) => {
     if (!starsRef.current) return;
     
     const time = clock.getElapsedTime();
     
-    // Create much more dramatic flickering effect with multiple frequencies
-    const flicker1 = Math.sin(time * 4 + flickerOffsets[0]) * 0.3;
-    const flicker2 = Math.sin(time * 7.5 + flickerOffsets[1]) * 0.2;
-    const flicker3 = Math.sin(time * 12 + flickerOffsets[2]) * 0.15;
-    const flicker4 = Math.sin(time * 2.3 + flickerOffsets[3]) * 0.25;
-    const flicker5 = Math.sin(time * 15.7 + flickerOffsets[4]) * 0.1;
+    // Reduced flickering for better performance
+    const flicker1 = Math.sin(time * 4 + flickerOffsets[0]) * 0.2;
+    const flicker2 = Math.sin(time * 7.5 + flickerOffsets[1]) * 0.15;
+    const flicker3 = Math.sin(time * 12 + flickerOffsets[2]) * 0.1;
     
-    const combinedFlicker = 0.4 + flicker1 + flicker2 + flicker3 + flicker4 + flicker5;
-    const rotationSpeed = time * 0.015;
+    const combinedFlicker = 0.5 + flicker1 + flicker2 + flicker3;
+    const rotationSpeed = time * 0.01;
     
     // Apply rotation for gentle movement
     starsRef.current.rotation.x = rotationSpeed * 0.1;
     starsRef.current.rotation.y = rotationSpeed * 0.05;
     starsRef.current.rotation.z = rotationSpeed * 0.02;
     
-    // Apply dramatic flickering by modifying the material opacity
+    // Apply flickering by modifying the material opacity
     if (starsRef.current.material) {
-      starsRef.current.material.opacity = Math.max(0.1, Math.min(1.0, combinedFlicker));
+      starsRef.current.material.opacity = Math.max(0.2, Math.min(1.0, combinedFlicker));
       starsRef.current.material.needsUpdate = true;
     }
   });
@@ -122,19 +122,20 @@ function FlickeringStars() {
       ref={starsRef}
       radius={120} 
       depth={80} 
-      count={12000} 
+      count={isMobile ? 6000 : 10000} // Fewer stars on mobile
       factor={8} 
       saturation={0} 
       fade 
-      speed={0.3}
+      speed={0.2}
     />
   );
 }
 
 function BlakeImage({ imageUrl }) {
   const { viewport } = useThree();
-  const scale = viewport.height * 0.9;
   const meshRef = useRef();
+  const isMobile = isMobileDevice();
+  const scale = getOptimizedImageSize(viewport, isMobile);
   
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
@@ -152,17 +153,43 @@ function BlakeImage({ imageUrl }) {
       ref={meshRef}
       key={imageUrl}
       url={imageUrl}
-      scale={[scale * 0.85, scale, 1]}
+      scale={scale}
       position={[0, -viewport.height * 0.05, 5]} // Move up and slightly forward
       transparent={true}
       alphaTest={0.001}
       depthWrite={false}
+      // Performance optimizations
+      crossOrigin="anonymous"
+      premultiplyAlpha={false}
+      generateMipmaps={false}
+      minFilter={THREE.LinearFilter}
+      magFilter={THREE.LinearFilter}
     />
   );
 }
 
 export function NeuralNetScene({ topics = [] }) {
     const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
+    const [preloadedImages, setPreloadedImages] = useState(new Set());
+    const imageLoader = useRef(new ImageLoader());
+
+    // Preload all topic images for faster switching
+    useEffect(() => {
+        const preloadAllImages = async () => {
+            const imageUrls = topics.map(topic => `/images/topics/${topic}.png`);
+            
+            try {
+                await imageLoader.current.preloadImages(imageUrls);
+                setPreloadedImages(new Set(topics));
+            } catch (error) {
+                console.warn('Some images failed to preload:', error);
+            }
+        };
+
+        if (topics.length > 0) {
+            preloadAllImages();
+        }
+    }, [topics]);
 
     const handleWordHover = (topic) => {
       setImageUrl(`/images/topics/${topic}.png`);
@@ -178,9 +205,14 @@ export function NeuralNetScene({ topics = [] }) {
             alpha: true, 
             antialias: true,
             premultipliedAlpha: false,
-            preserveDrawingBuffer: true
+            preserveDrawingBuffer: true,
+            powerPreference: "high-performance",
+            stencil: false,
+            depth: true
           }} 
           camera={{ position: [0, 0, 30], fov: 75 }}
+          dpr={[1, 2]} // Limit device pixel ratio for better performance
+          performance={{ min: 0.5 }} // Reduce quality if FPS drops below 30
         >
             <FlickeringStars />
             <BlakeImage imageUrl={imageUrl} />
