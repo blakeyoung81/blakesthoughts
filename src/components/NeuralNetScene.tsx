@@ -153,7 +153,7 @@ function BlakeImage({ imageUrl }) {
       key={imageUrl}
       url={imageUrl}
       scale={[scale * 0.85, scale, 1]}
-      position={[0, -viewport.height * 0.19, 5]} // Move slightly forward
+      position={[0, -viewport.height * 0.05, 5]} // Move up and slightly forward
       transparent={true}
       alphaTest={0.001}
       depthWrite={false}
