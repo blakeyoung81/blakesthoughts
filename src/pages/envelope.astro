@@ -88,19 +88,19 @@ const description = "Something magical awaits...";
             background: linear-gradient(135deg, #f5e6d3 0%, #fff 100%);
             border-radius: 8px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease, transform 0.8s ease;
         }
 
         .envelope.stage-1 {
-            transform: rotateX(5deg);
+            transform: rotateX(8deg);
         }
 
         .envelope.stage-2 {
-            transform: rotateX(10deg);
+            transform: rotateX(15deg) translateY(-10px);
         }
 
         .envelope.stage-3 {
-            transform: rotateX(15deg) translateY(-20px);
+            transform: rotateX(25deg) translateY(-30px) scale(1.05);
         }
 
         .envelope-flap {
@@ -125,18 +125,23 @@ const description = "Something magical awaits...";
             transform: translate(-50%, -50%);
             font-size: 3rem;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            transition: all 0.5s ease;
         }
 
         .envelope.stage-1 .envelope-flap {
-            transform: rotateX(-20deg);
+            transform: rotateX(-30deg);
         }
 
         .envelope.stage-2 .envelope-flap {
-            transform: rotateX(-50deg);
+            transform: rotateX(-70deg);
         }
 
         .envelope.stage-3 .envelope-flap {
-            transform: rotateX(-120deg);
+            transform: rotateX(-140deg);
+        }
+        
+        .envelope.stage-3 .envelope-flap::before {
+            opacity: 0.3;
         }
 
         .envelope-letter {
@@ -197,15 +202,24 @@ const description = "Something magical awaits...";
         .ticket-scratch {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, #c0c0c0 0%, #silver 100%);
+            background: linear-gradient(135deg, #d4af37 0%, #f0d78c 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: 600;
+            flex-direction: column;
+            font-size: 0.7rem;
+            color: #8b7355;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
             transition: all 0.6s ease;
             cursor: pointer;
+            border: 2px dashed rgba(139, 115, 85, 0.3);
+        }
+        
+        .ticket-scratch::before {
+            content: '🎫';
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
         }
 
         .ticket.revealed .ticket-scratch {
@@ -229,32 +243,46 @@ const description = "Something magical awaits...";
             color: white;
         }
 
-        /* PDF Reveal */
-        .pdf-reveal {
+        /* Video Reveal */
+        .video-reveal {
             display: none;
             animation: fadeIn 1s ease-in;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
         }
 
-        .pdf-reveal.active {
+        .video-reveal.active {
             display: block;
         }
 
-        .pdf-button {
-            display: inline-block;
-            padding: 1.5rem 3rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            transition: all 0.3s ease;
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 1.5rem;
         }
 
-        .pdf-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .reveal-message {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
         }
 
         .progress-text {
@@ -306,16 +334,44 @@ const description = "Something magical awaits...";
 
         @media (max-width: 640px) {
             h1 {
-                font-size: 2rem;
-            }
-
-            .ticket {
-                width: 100px;
-                height: 100px;
+                font-size: 1.8rem;
+                padding: 0 1rem;
             }
 
             .subtitle {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+                padding: 0 1rem;
+            }
+
+            .envelope-container {
+                max-width: 320px;
+            }
+
+            .ticket {
+                width: 90px;
+                height: 90px;
+            }
+
+            .ticket-scratch {
+                font-size: 0.6rem;
+            }
+            
+            .ticket-scratch::before {
+                font-size: 1.5rem;
+            }
+
+            .progress-text {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+
+            .reveal-message {
+                font-size: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .video-container {
+                border-radius: 12px;
             }
         }
     </style>
@@ -345,17 +401,17 @@ const description = "Something magical awaits...";
             <div class="ticket" id="ticket1">
                 <div class="ticket-number">1</div>
                 <div class="ticket-back">✓</div>
-                <div class="ticket-scratch">SCRATCH<br>TO REVEAL</div>
+                <div class="ticket-scratch">Scan QR Code<br>to Unlock</div>
             </div>
             <div class="ticket" id="ticket2">
                 <div class="ticket-number">2</div>
                 <div class="ticket-back">✓</div>
-                <div class="ticket-scratch">SCRATCH<br>TO REVEAL</div>
+                <div class="ticket-scratch">Scan QR Code<br>to Unlock</div>
             </div>
             <div class="ticket" id="ticket3">
                 <div class="ticket-number">3</div>
                 <div class="ticket-back">✓</div>
-                <div class="ticket-scratch">SCRATCH<br>TO REVEAL</div>
+                <div class="ticket-scratch">Scan QR Code<br>to Unlock</div>
             </div>
         </div>
 
@@ -364,14 +420,18 @@ const description = "Something magical awaits...";
             Collect all three dates to reveal the surprise...
         </div>
 
-        <!-- PDF Reveal -->
-        <div class="pdf-reveal" id="pdfReveal">
-            <h2 style="font-family: 'Cormorant Garamond', serif; color: white; margin-bottom: 1.5rem; font-size: 2rem;">
-                Your Invitation is Ready! 💝
+        <!-- Video Reveal -->
+        <div class="video-reveal" id="videoReveal">
+            <h2 class="reveal-message">
+                Your Special Invitation Awaits! 💝
             </h2>
-            <a href="/final-invitation.pdf" class="pdf-button" download>
-                Open Your Invitation
-            </a>
+            <div class="video-container">
+                <video id="invitationVideo" controls autoplay playsinline>
+                    <source src="/final-invitation.mov" type="video/quicktime">
+                    <source src="/final-invitation.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         </div>
     </div>
 
@@ -400,7 +460,7 @@ const description = "Something magical awaits...";
             const state = getState();
             const envelope = document.getElementById('envelope');
             const progressText = document.getElementById('progressText');
-            const pdfReveal = document.getElementById('pdfReveal');
+            const videoReveal = document.getElementById('videoReveal');
             const ticketsContainer = document.getElementById('ticketsContainer');
 
             let revealedCount = 0;
@@ -424,10 +484,18 @@ const description = "Something magical awaits...";
                 progressText.textContent = 'Almost there! One more date... 💖';
             } else if (revealedCount === 3 || state.complete) {
                 envelope.classList.add('stage-3');
-                progressText.style.display = 'none';
-                ticketsContainer.style.display = 'none';
-                pdfReveal.classList.add('active');
-                createConfetti();
+                // Hide envelope and tickets after a delay to show the opening animation
+                setTimeout(() => {
+                    envelope.style.opacity = '0';
+                    envelope.style.transform = 'scale(0.8)';
+                    ticketsContainer.style.display = 'none';
+                    progressText.style.display = 'none';
+                    
+                    setTimeout(() => {
+                        videoReveal.classList.add('active');
+                        createConfetti();
+                    }, 800);
+                }, 1500);
             } else {
                 progressText.textContent = 'Collect all three dates to reveal the surprise...';
             }
