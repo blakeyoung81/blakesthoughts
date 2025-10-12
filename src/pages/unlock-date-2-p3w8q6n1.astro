@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -62,7 +62,7 @@
         h1 {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2.5rem;
-            color: #f5576c;
+            color: #a66cbe;
             margin-bottom: 1rem;
         }
 
@@ -76,13 +76,13 @@
         .continue-btn {
             display: inline-block;
             padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #333;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
             font-size: 1.1rem;
-            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+            box-shadow: 0 10px 30px rgba(251, 194, 235, 0.4);
             transition: all 0.3s ease;
         }
 
@@ -113,13 +113,13 @@
     <div class="sparkles" id="sparkles"></div>
     
     <div class="unlock-container">
-        <div class="success-icon">🎊</div>
-        <h1>Second Date Unlocked!</h1>
+        <div class="success-icon">💫</div>
+        <h1>Second One Complete!</h1>
         <p class="message">
-            Two dates down, what an adventure! 💖<br>
+            You're amazing! This is so much fun! 💕<br>
             You've scratched off ticket #2.<br>
             <br>
-            <strong>Just one more date until the big surprise...</strong>
+            <strong>Just one more to see what's waiting...</strong>
         </p>
         <a href="/envelope" class="continue-btn">See Your Progress</a>
     </div>
@@ -144,7 +144,7 @@
         // Create sparkle effect
         function createSparkles() {
             const container = document.getElementById('sparkles');
-            const emojis = ['✨', '💖', '💕', '💝', '🌟', '💗', '⭐', '💫'];
+            const emojis = ['✨', '💖', '💕', '💝', '🌟', '💗', '⭐', '💫', '😍'];
             
             for (let i = 0; i < 50; i++) {
                 setTimeout(() => {

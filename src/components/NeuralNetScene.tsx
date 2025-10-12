@@ -5,7 +5,13 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { ImageLoader, isMobileDevice, getOptimizedImageSize } from '../utils/imageOptimization';
 
-function Word({ topic, onHover, onLeave, ...props }) {
+interface WordProps {
+  topic: string;
+  onHover: (topic: string) => void;
+  onLeave: () => void;
+}
+
+function Word({ topic, onHover, onLeave, ...props }: WordProps) {
   const ref = useRef();
   
   const [initialPosition, velocity, sin, cos] = useMemo(() => {
@@ -43,7 +49,7 @@ function Word({ topic, onHover, onLeave, ...props }) {
     window.location.href = url;
   };
 
-  const handlePointerOver = (e) => {
+  const handlePointerOver = (e: any) => {
     e.stopPropagation();
     document.body.style.cursor = 'pointer';
     onHover(topic);
@@ -72,7 +78,14 @@ function Word({ topic, onHover, onLeave, ...props }) {
   );
 }
 
-function Cloud({ topics, radius, onWordHover, onWordLeave }) {
+interface CloudProps {
+  topics: string[];
+  radius: number;
+  onWordHover: (topic: string) => void;
+  onWordLeave: () => void;
+}
+
+function Cloud({ topics, radius, onWordHover, onWordLeave }: CloudProps) {
   return (
     <>
       {topics.map((topic, i) => (
@@ -131,7 +144,11 @@ function FlickeringStars() {
   );
 }
 
-function BlakeImage({ imageUrl }) {
+interface BlakeImageProps {
+  imageUrl: string;
+}
+
+function BlakeImage({ imageUrl }: BlakeImageProps) {
   const { viewport } = useThree();
   const meshRef = useRef();
   const isMobile = isMobileDevice();
@@ -168,30 +185,54 @@ function BlakeImage({ imageUrl }) {
   );
 }
 
-export function NeuralNetScene({ topics = [] }) {
+interface NeuralNetSceneProps {
+  topics?: string[];
+}
+
+export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
     const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
     const [preloadedImages, setPreloadedImages] = useState(new Set());
+    const [isReady, setIsReady] = useState(false);
     const imageLoader = useRef(new ImageLoader());
 
-    // Preload all topic images for faster switching
+    // Preload critical images first, then the rest
     useEffect(() => {
-        const preloadAllImages = async () => {
-            const imageUrls = topics.map(topic => `/images/topics/${topic}.png`);
-            
+        const preloadImages = async () => {
+            if (topics.length === 0) {
+                setIsReady(true);
+                return;
+            }
+
             try {
-                await imageLoader.current.preloadImages(imageUrls);
+                // Preload default image first
+                await imageLoader.current.preloadImage('/images/topics/Default.png');
+                setIsReady(true);
+
+                // Preload the first few topic images
+                const priorityTopics = topics.slice(0, 3);
+                const priorityUrls = priorityTopics.map(topic => `/images/topics/${topic}.png`);
+                await imageLoader.current.preloadImages(priorityUrls);
+                
+                // Preload remaining images in the background
+                const remainingTopics = topics.slice(3);
+                const remainingUrls = remainingTopics.map(topic => `/images/topics/${topic}.png`);
+                if (remainingUrls.length > 0) {
+                    imageLoader.current.preloadImages(remainingUrls).catch(() => {
+                        // Silently fail for background preloading
+                    });
+                }
+
                 setPreloadedImages(new Set(topics));
             } catch (error) {
                 console.warn('Some images failed to preload:', error);
+                setIsReady(true); // Continue even if preload fails
             }
         };
 
-        if (topics.length > 0) {
-            preloadAllImages();
-        }
+        preloadImages();
     }, [topics]);
 
-    const handleWordHover = (topic) => {
+    const handleWordHover = (topic: string) => {
       setImageUrl(`/images/topics/${topic}.png`);
     };
 
@@ -199,19 +240,27 @@ export function NeuralNetScene({ topics = [] }) {
       setImageUrl('/images/topics/Default.png');
     };
 
+    if (!isReady) {
+        return (
+            <div className="w-full h-full flex items-center justify-center">
+                <div className="text-white text-xl animate-pulse">Loading...</div>
+            </div>
+        );
+    }
+
     return (
         <Canvas 
           gl={{ 
             alpha: true, 
-            antialias: true,
+            antialias: false, // Disable for better performance
             premultipliedAlpha: false,
-            preserveDrawingBuffer: true,
+            preserveDrawingBuffer: false, // Disable for better performance
             powerPreference: "high-performance",
             stencil: false,
             depth: true
           }} 
           camera={{ position: [0, 0, 30], fov: 75 }}
-          dpr={[1, 2]} // Limit device pixel ratio for better performance
+          dpr={[1, 1.5]} // Lower max DPR for better performance
           performance={{ min: 0.5 }} // Reduce quality if FPS drops below 30
         >
             <FlickeringStars />
@@ -227,7 +276,7 @@ export function NeuralNetScene({ topics = [] }) {
             <ambientLight intensity={0.7} />
             <pointLight position={[10, 10, 10]} intensity={0.5} />
             <EffectComposer>
-                <Bloom luminanceThreshold={0.05} intensity={0.9} levels={9} mipmapBlur />
+                <Bloom luminanceThreshold={0.1} intensity={0.7} levels={7} mipmapBlur />
             </EffectComposer>
         </Canvas>
     );

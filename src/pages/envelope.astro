@@ -23,13 +23,26 @@ const description = "Something magical awaits...";
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             position: relative;
+            transition: background 1s ease;
+        }
+        
+        body.stage-1 {
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+        }
+        
+        body.stage-2 {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        body.stage-3 {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
         }
 
         /* Floating hearts background */
@@ -402,16 +415,16 @@ const description = "Something magical awaits...";
     </style>
 </head>
 <body>
-    <!-- Floating hearts -->
-    <div class="heart" style="left: 10%; top: 20%; animation-delay: 0s;">💕</div>
-    <div class="heart" style="left: 80%; top: 30%; animation-delay: 2s;">💖</div>
-    <div class="heart" style="left: 20%; top: 70%; animation-delay: 4s;">💗</div>
-    <div class="heart" style="left: 90%; top: 60%; animation-delay: 6s;">💕</div>
-    <div class="heart" style="left: 50%; top: 10%; animation-delay: 8s;">💝</div>
+    <!-- Floating hearts/icons - will change based on stage -->
+    <div class="heart" id="heart1" style="left: 10%; top: 20%; animation-delay: 0s;">⭐</div>
+    <div class="heart" id="heart2" style="left: 80%; top: 30%; animation-delay: 2s;">✨</div>
+    <div class="heart" id="heart3" style="left: 20%; top: 70%; animation-delay: 4s;">🎁</div>
+    <div class="heart" id="heart4" style="left: 90%; top: 60%; animation-delay: 6s;">⭐</div>
+    <div class="heart" id="heart5" style="left: 50%; top: 10%; animation-delay: 8s;">✨</div>
 
     <div class="container">
-        <h1>A Special Surprise Awaits...</h1>
-        <p class="subtitle">Follow the journey to unlock your invitation</p>
+        <h1 id="mainTitle">A Special Surprise Awaits...</h1>
+        <p class="subtitle" id="subtitle">Complete the challenges to unlock what's inside!</p>
 
         <!-- Envelope -->
         <div class="envelope-container">
@@ -486,6 +499,8 @@ const description = "Something magical awaits...";
             const progressText = document.getElementById('progressText');
             const gifReveal = document.getElementById('gifReveal');
             const ticketsContainer = document.getElementById('ticketsContainer');
+            const mainTitle = document.getElementById('mainTitle');
+            const subtitle = document.getElementById('subtitle');
 
             let revealedCount = 0;
             
@@ -500,14 +515,28 @@ const description = "Something magical awaits...";
 
             // Update envelope based on progress
             envelope.className = 'envelope';
+            
+            // Update stage-specific styling
             if (revealedCount === 1) {
                 envelope.classList.add('stage-1');
-                progressText.textContent = 'One date down, two to go! 💕';
+                document.body.className = 'stage-1';
+                mainTitle.textContent = 'Great Start! 🌟';
+                subtitle.textContent = 'You\'re doing wonderfully! Keep going! 😊';
+                progressText.textContent = 'One down, two more to go! ⭐';
+                updateHearts(['✨', '🌟', '⭐', '✨', '💫']);
             } else if (revealedCount === 2) {
                 envelope.classList.add('stage-2');
-                progressText.textContent = 'Almost there! One more date... 💖';
+                document.body.className = 'stage-2';
+                mainTitle.textContent = 'This is Getting Exciting! 💫';
+                subtitle.textContent = 'You\'re almost there! One more to go! ✨';
+                progressText.textContent = 'Almost there! One more... 💕';
+                updateHearts(['💫', '✨', '💕', '🌟', '💖']);
             } else if (revealedCount === 3 || state.complete) {
                 envelope.classList.add('stage-3');
+                document.body.className = 'stage-3';
+                mainTitle.textContent = 'Amazing! You Did It! 💝';
+                subtitle.textContent = 'Here\'s your special invitation! 🎉';
+                updateHearts(['💕', '💖', '💗', '💕', '💝']);
                 // Hide envelope and tickets after a delay to show the opening animation
                 setTimeout(() => {
                     envelope.style.opacity = '0';
@@ -521,7 +550,20 @@ const description = "Something magical awaits...";
                     }, 800);
                 }, 1500);
             } else {
-                progressText.textContent = 'Collect all three dates to reveal the surprise...';
+                document.body.className = '';
+                mainTitle.textContent = 'A Special Surprise Awaits...';
+                subtitle.textContent = 'Complete the challenges to unlock what\'s inside!';
+                progressText.textContent = 'Collect all three challenges to reveal the surprise...';
+                updateHearts(['⭐', '✨', '🎁', '⭐', '✨']);
+            }
+        }
+
+        function updateHearts(emojis) {
+            for (let i = 0; i < emojis.length; i++) {
+                const heart = document.getElementById(`heart${i + 1}`);
+                if (heart) {
+                    heart.textContent = emojis[i];
+                }
             }
         }
 

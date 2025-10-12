@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { NeuralNetScene } from '../components/NeuralNetScene.tsx';
+import { MobileTopicCarousel } from '../components/MobileTopicCarousel.tsx';
 
 // Fetch all posts and derive a unique list of tags for the hero scene
 const allPosts = await getCollection('blog');
@@ -71,21 +72,42 @@ const blakeProjects = [
 ---
 
 <BaseLayout>
+	<!-- Preload critical images for faster loading -->
+	<link rel="preload" href="/images/topics/Default.png" as="image" slot="head" />
+	{finalTopics.slice(0, 3).map(topic => (
+		<link rel="preload" href={`/images/topics/${topic}.png`} as="image" slot="head" />
+	))}
+	
 	<div class="relative w-full h-screen">
 		<div class="absolute inset-0 z-0 bg-gradient-to-r from-indigo-900 via-purple-900 to-fuchsia-900"></div>
 		
-		<!-- R3F Scene takes full screen -->
-		<div class="absolute inset-0 z-10">
-			<NeuralNetScene client:load topics={finalTopics} />
+		<!-- Mobile: Topic Carousel -->
+		<div class="md:hidden absolute inset-0 z-10">
+			<MobileTopicCarousel client:load topics={finalTopics} />
+		</div>
+		
+		<!-- Desktop: 3D Neural Net Scene (hidden on mobile for performance) -->
+		<div class="hidden md:block absolute inset-0 z-10">
+			<NeuralNetScene client:idle topics={finalTopics} />
 		</div>
 
-		<!-- Title bottom right - mobile responsive -->
-		<div class="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-30 pointer-events-none">
+		<!-- Title bottom right - only show on desktop -->
+		<div class="hidden md:block absolute bottom-4 sm:bottom-8 right-4 sm:right-8 z-30 pointer-events-none">
 			<h1 class="text-3xl sm:text-5xl md:text-7xl font-bold text-white text-right drop-shadow-lg leading-tight">Blake's<br>Thoughts</h1>
+		</div>
+
+		<!-- Scroll Indicator -->
+		<div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
+			<a href="#content" class="flex flex-col items-center text-white/80 hover:text-white transition-colors" aria-label="Scroll to content">
+				<span class="text-sm mb-2 font-medium">Explore</span>
+				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+				</svg>
+			</a>
 		</div>
 	</div>
 
-	<main class="relative z-20 bg-slate-900/50 backdrop-blur-sm">
+	<main class="relative z-20 bg-slate-900/50 backdrop-blur-sm" id="content">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 space-y-16 sm:space-y-24 py-12 sm:py-20">
 			<!-- Recent Writings Section -->
 			<section>
