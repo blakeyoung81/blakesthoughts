@@ -155,6 +155,24 @@ interface BlakeImageProps {
 }
 
 function BlakeImage({ imageUrl }: BlakeImageProps) {
+  const { viewport, camera, size } = useThree();
+  const meshRef = useRef();
+  const isMobile = isMobileDevice();
+  const targetDepth = 5;
+  const targetVector = useMemo(() => new THREE.Vector3(0, 0, targetDepth), [targetDepth]);
+  const currentViewport = useMemo(
+    () => viewport.getCurrentViewport(camera, targetVector),
+    [viewport, camera, targetVector, size.width, size.height]
+  );
+  const scale = useMemo(
+    () => getOptimizedImageSize(currentViewport, isMobile),
+    [currentViewport, isMobile]
+  );
+  const imagePosition: [number, number, number] = useMemo(() => {
+    const floorY = -currentViewport.height / 2;
+    const baselineLift = currentViewport.height * (isMobile ? 0.12 : 0.08);
+    return [0, floorY + scale[1] / 2 + baselineLift, targetDepth];
+  }, [currentViewport.height, scale, targetDepth, isMobile]);
   const { viewport, camera } = useThree();
   const meshRef = useRef();
   const isMobile = isMobileDevice();
