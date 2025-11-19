@@ -155,38 +155,20 @@ interface BlakeImageProps {
 }
 
 function BlakeImage({ imageUrl }: BlakeImageProps) {
-  const { viewport, camera, size } = useThree();
+  const { viewport, camera } = useThree();
   const meshRef = useRef();
   const isMobile = isMobileDevice();
   const targetDepth = 5;
-  const targetVector = useMemo(() => new THREE.Vector3(0, 0, targetDepth), [targetDepth]);
   const currentViewport = useMemo(
-    () => viewport.getCurrentViewport(camera, targetVector),
-    [viewport, camera, targetVector, size.width, size.height]
+    () => viewport.getCurrentViewport(camera, [0, 0, targetDepth]),
+    [viewport, camera]
   );
-  const scale = useMemo(
-    () => getOptimizedImageSize(currentViewport, isMobile),
-    [currentViewport, isMobile]
-  );
-
-  const floorY = useMemo(() => {
-    const activeCamera = camera as THREE.PerspectiveCamera;
-    const ndcBottom = new THREE.Vector3(0, -1, 0);
-    const worldPoint = ndcBottom.clone().unproject(activeCamera);
-    const direction = worldPoint.sub(activeCamera.position).normalize();
-    const epsilon = 1e-4;
-    if (Math.abs(direction.z) < epsilon) {
-      return -currentViewport.height / 2;
-    }
-
-    const distance = (targetDepth - activeCamera.position.z) / direction.z;
-    const pointAtDepth = activeCamera.position.clone().add(direction.multiplyScalar(distance));
-    return pointAtDepth.y;
-  }, [camera, currentViewport.height, size.width, size.height, targetDepth]);
-
-  const imagePosition: [number, number, number] = useMemo(() => {
-    return [0, floorY + scale[1] / 2, targetDepth];
-  }, [floorY, scale, targetDepth]);
+  const scale = useMemo(() => getOptimizedImageSize(currentViewport, isMobile), [currentViewport, isMobile]);
+  const imagePosition: [number, number, number] = [
+    0,
+    -currentViewport.height / 2 + scale[1] / 2,
+    targetDepth,
+  ];
 
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
