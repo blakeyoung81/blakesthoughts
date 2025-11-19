@@ -155,11 +155,21 @@ interface BlakeImageProps {
 }
 
 function BlakeImage({ imageUrl }: BlakeImageProps) {
-  const { viewport } = useThree();
+  const { viewport, camera } = useThree();
   const meshRef = useRef();
   const isMobile = isMobileDevice();
-  const scale = getOptimizedImageSize(viewport, isMobile);
-  
+  const targetDepth = 5;
+  const currentViewport = useMemo(
+    () => viewport.getCurrentViewport(camera, [0, 0, targetDepth]),
+    [viewport, camera]
+  );
+  const scale = useMemo(() => getOptimizedImageSize(currentViewport, isMobile), [currentViewport, isMobile]);
+  const imagePosition: [number, number, number] = [
+    0,
+    -currentViewport.height / 2 + scale[1] / 2,
+    targetDepth,
+  ];
+
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
       // Force complete transparency for PNG backgrounds
@@ -177,7 +187,7 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
       key={imageUrl}
       url={imageUrl}
       scale={scale}
-      position={[0, -viewport.height * 0.05, 5]} // Move up and slightly forward
+      position={imagePosition}
       transparent={true}
       alphaTest={0.001}
       depthWrite={false}
