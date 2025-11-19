@@ -13,35 +13,41 @@ interface WordProps {
 
 function Word({ topic, onHover, onLeave, ...props }: WordProps) {
   const ref = useRef();
-  
-  const [initialPosition, velocity, sin, cos] = useMemo(() => {
+
+  const [{ basePosition, phase, amplitude, speed }] = useMemo(() => {
     // Truly random initial position in 3D space around the sphere
     const radius = 25 + Math.random() * 10; // Random radius between 25-35
     const phi = Math.random() * Math.PI; // Random angle 0 to π
     const theta = Math.random() * 2 * Math.PI; // Random angle 0 to 2π
-    
-    const initialPos = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
-    const velocity = new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
-    const sin = Math.random() * 2 * Math.PI;
-    const cos = Math.random() * 2 * Math.PI;
-    return [initialPos, velocity, sin, cos];
-  }, []);
 
-  // Set initial position only once
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.position.copy(initialPosition);
-    }
-  }, [initialPosition]);
+    const basePosition = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
+
+    return [{
+      basePosition,
+      phase: {
+        x: Math.random() * Math.PI * 2,
+        y: Math.random() * Math.PI * 2,
+        z: Math.random() * Math.PI * 2,
+      },
+      amplitude: 2 + Math.random() * 1.5, // Slight variance so words don't move in sync
+      speed: 0.2 + Math.random() * 0.15,
+    }];
+  }, []);
 
   useFrame(({ clock }) => {
     if (!ref.current) return;
-    
-    const time = clock.getElapsedTime() * 0.1;
-    // Just add gentle floating motion to the current position
-    ref.current.position.x += Math.sin(time + sin) * 0.01;
-    ref.current.position.y += Math.cos(time + cos) * 0.01;
-    ref.current.position.z += Math.sin(time + cos) * 0.01;
+
+    const time = clock.getElapsedTime() * speed;
+
+    const offsetX = Math.sin(time + phase.x) * amplitude;
+    const offsetY = Math.cos(time * 0.8 + phase.y) * (amplitude * 0.6);
+    const offsetZ = Math.sin(time * 1.1 + phase.z) * (amplitude * 0.8);
+
+    ref.current.position.set(
+      basePosition.x + offsetX,
+      basePosition.y + offsetY,
+      basePosition.z + offsetZ
+    );
   });
 
   const handleClick = () => {
@@ -149,11 +155,39 @@ interface BlakeImageProps {
 }
 
 function BlakeImage({ imageUrl }: BlakeImageProps) {
-  const { viewport } = useThree();
+  const { viewport, camera, size } = useThree();
   const meshRef = useRef();
   const isMobile = isMobileDevice();
-  const scale = getOptimizedImageSize(viewport, isMobile);
-  
+  const targetDepth = 5;
+  const targetVector = useMemo(() => new THREE.Vector3(0, 0, targetDepth), [targetDepth]);
+  const currentViewport = useMemo(
+    () => viewport.getCurrentViewport(camera, targetVector),
+    [viewport, camera, targetVector, size.width, size.height]
+  );
+  const scale = useMemo(
+    () => getOptimizedImageSize(currentViewport, isMobile),
+    [currentViewport, isMobile]
+  );
+
+  const floorY = useMemo(() => {
+    const activeCamera = camera as THREE.PerspectiveCamera;
+    const ndcBottom = new THREE.Vector3(0, -1, 0);
+    const worldPoint = ndcBottom.clone().unproject(activeCamera);
+    const direction = worldPoint.sub(activeCamera.position).normalize();
+    const epsilon = 1e-4;
+    if (Math.abs(direction.z) < epsilon) {
+      return -currentViewport.height / 2;
+    }
+
+    const distance = (targetDepth - activeCamera.position.z) / direction.z;
+    const pointAtDepth = activeCamera.position.clone().add(direction.multiplyScalar(distance));
+    return pointAtDepth.y;
+  }, [camera, currentViewport.height, size.width, size.height, targetDepth]);
+
+  const imagePosition: [number, number, number] = useMemo(() => {
+    return [0, floorY + scale[1] / 2, targetDepth];
+  }, [floorY, scale, targetDepth]);
+
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
       // Force complete transparency for PNG backgrounds
@@ -171,7 +205,7 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
       key={imageUrl}
       url={imageUrl}
       scale={scale}
-      position={[0, -viewport.height * 0.05, 5]} // Move up and slightly forward
+      position={imagePosition}
       transparent={true}
       alphaTest={0.001}
       depthWrite={false}

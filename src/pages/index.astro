@@ -28,46 +28,66 @@ const recentBlogPosts = allPosts
 
 // Define Blake's actual projects
 const blakeProjects = [
-	{
-		title: "Ivy Tutoring",
-		description: "Premium tutoring services connecting students with top-tier educators for personalized learning experiences.",
-		url: "https://ivytutoring.net",
-		category: "Education",
-		tech: ["Tutoring", "Education", "Learning"],
-		color: "from-green-500 to-emerald-600"
-	},
-	{
-		title: "Ivy Med",
-		description: "Medical education and preparation resources for aspiring healthcare professionals.",
-		url: "https://ivymed.net", 
-		category: "Medical Education",
-		tech: ["Healthcare", "Medical", "Education"],
-		color: "from-blue-500 to-cyan-600"
-	},
-	{
-		title: "Ivy Sprouts",
-		description: "Early childhood development and educational programs fostering young minds and creativity.",
-		url: "https://ivysprouts.net",
-		category: "Early Education",
-		tech: ["Children", "Development", "Learning"],
-		color: "from-purple-500 to-pink-600"
-	},
-	{
-		title: "Restoring Hope Clinic", 
-		description: "Community healthcare clinic providing compassionate medical care and hope to underserved populations.",
-		url: "https://restoringhopeclinic.org",
-		category: "Healthcare",
-		tech: ["Healthcare", "Community", "Wellness"],
-		color: "from-orange-500 to-red-600"
-	},
-	{
-		title: "Board Buddy",
-		description: "AI-powered study companion for medical students featuring problem solving, memory aids, and personalized tutoring personas.",
-		url: "https://www.boardcompanion.com/",
-		category: "Medical AI",
-		tech: ["AI", "Medical Education", "Chrome Extension"],
-		color: "from-indigo-500 to-purple-600"
-	}
+        {
+                title: "Ivy Tutoring",
+                description: "Premium tutoring services connecting students with top-tier educators for personalized learning experiences.",
+                url: "https://ivytutoring.net",
+                category: "Education",
+                tech: ["Tutoring", "Education", "Learning"],
+                color: "from-green-500 to-emerald-600",
+                image: "https://ivytutoring.net/static/assets/intake_cover-min.png",
+                imageAlt: "Ivy Tutoring hero illustration"
+        },
+        {
+                title: "Ivy Med",
+                description: "Medical education and preparation resources for aspiring healthcare professionals.",
+                url: "https://ivymed.net",
+                category: "Medical Education",
+                tech: ["Healthcare", "Medical", "Education"],
+                color: "from-blue-500 to-cyan-600",
+                image: "https://ivymed.net/ivymed_logo.png",
+                imageAlt: "Ivy Med logo"
+        },
+        {
+                title: "Ivy Sprouts",
+                description: "Early childhood development and educational programs fostering young minds and creativity.",
+                url: "https://ivysprouts.net",
+                category: "Early Education",
+                tech: ["Children", "Development", "Learning"],
+                color: "from-purple-500 to-pink-600",
+                image: "https://ivysprouts.net/images/Smile%20Sprout.png",
+                imageAlt: "Ivy Sprouts Smile Sprout mascot"
+        },
+        {
+                title: "Restoring Hope Clinic",
+                description: "Community healthcare clinic providing compassionate medical care and hope to underserved populations.",
+                url: "https://restoringhopeclinic.org",
+                category: "Healthcare",
+                tech: ["Healthcare", "Community", "Wellness"],
+                color: "from-orange-500 to-red-600",
+                image: "https://www.restoringhopeclinic.org/apple-touch-icon.png",
+                imageAlt: "Restoring Hope Clinic apple-touch icon"
+        },
+        {
+                title: "Board Buddy",
+                description: "AI-powered study companion for medical students featuring problem solving, memory aids, and personalized tutoring personas.",
+                url: "https://www.boardcompanion.com/",
+                category: "Medical AI",
+                tech: ["AI", "Medical Education", "Chrome Extension"],
+                color: "from-indigo-500 to-purple-600",
+                image: "https://www.boardcompanion.com/assets/feature-strategy.png",
+                imageAlt: "Board Buddy strategic study feature"
+        },
+        {
+                title: "Colonist Buddy",
+                description: "Chrome extension that augments Colonist.io matches with automation tools, reminders, and strategy tracking.",
+                url: "https://chromewebstore.google.com/detail/colonist-buddy/mkbpkhkcggpopakinkdcbigocdjjbogp",
+                category: "Chrome Extension",
+                tech: ["Chrome", "Colonist.io", "Productivity"],
+                color: "from-amber-500 to-yellow-500",
+                image: "https://chromewebstore.google.com/detail/colonist-buddy/mkbpkhkcggpopakinkdcbigocdjjbogp/icons/icon128.png",
+                imageAlt: "Colonist Buddy Chrome Web Store icon"
+        }
 ];
 ---
 
@@ -150,22 +170,28 @@ const blakeProjects = [
 						</svg>
 					</a>
 				</div>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-					{blakeProjects.map(project => (
-						<a 
-							href={project.url} 
-							target="_blank" 
-							rel="noopener noreferrer"
-							class="group/card bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform relative overflow-hidden block cursor-pointer hover:border-white/20"
-						>
-							<!-- Gradient background accent -->
-							<div class={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${project.color} group-hover/card:h-2 transition-all duration-300`}></div>
-							
-							<div class="flex flex-col h-full">
-								<!-- Header -->
-								<div class="flex items-start justify-between mb-4">
-									<div>
-										<h3 class="font-bold text-xl text-white/90 group-hover/card:text-white transition-colors mb-1">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                                        {blakeProjects.map(project => (
+                                                <a
+                                                        href={project.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="group/card bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:-translate-y-2 transform relative overflow-hidden block cursor-pointer hover:border-white/20"
+                                                        key={project.url}
+                                                >
+                                                        <!-- Gradient background accent -->
+                                                        <div class={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${project.color} group-hover/card:h-2 transition-all duration-300`}></div>
+
+                                                        <div class="flex flex-col h-full">
+                                                                <!-- Thumbnail -->
+                                                                <div class="relative mb-5 overflow-hidden rounded-xl border border-white/10 shadow-lg shadow-black/20 group-hover/card:shadow-black/40 transition-all duration-300">
+                                                                        <img src={project.image} alt={project.imageAlt} loading="lazy" class="w-full h-44 sm:h-48 object-cover" />
+                                                                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
+                                                                </div>
+                                                                <!-- Header -->
+                                                                <div class="flex items-start justify-between mb-4">
+                                                                        <div>
+                                                                                <h3 class="font-bold text-xl text-white/90 group-hover/card:text-white transition-colors mb-1">
 											{project.title}
 										</h3>
 										<span class="text-xs font-medium text-white/50 uppercase tracking-wider group-hover/card:text-white/70 transition-colors">{project.category}</span>
@@ -179,13 +205,13 @@ const blakeProjects = [
 								<p class="text-white/60 mb-6 line-clamp-3 text-sm leading-relaxed flex-grow group-hover/card:text-white/80 transition-colors">{project.description}</p>
 
 								<!-- Tech Stack -->
-								<div class="flex flex-wrap gap-2 mb-4">
-									{project.tech.map(tech => (
-										<span class={`bg-gradient-to-r ${project.color} bg-opacity-20 text-white/80 text-xs px-3 py-1 rounded-full font-medium group-hover/card:bg-opacity-30 group-hover/card:text-white transition-all duration-300`}>
-											{tech}
-										</span>
-									))}
-								</div>
+                                                                <div class="flex flex-wrap gap-2 mb-4">
+                                                                        {project.tech.map(tech => (
+                                                                                <span class={`bg-gradient-to-r ${project.color} bg-opacity-20 text-white/80 text-xs px-3 py-1 rounded-full font-medium group-hover/card:bg-opacity-30 group-hover/card:text-white transition-all duration-300`} key={`${project.title}-${tech}`}>
+                                                                                        {tech}
+                                                                                </span>
+                                                                        ))}
+                                                                </div>
 
 								<!-- Visit Link -->
 								<div class={`inline-flex items-center space-x-2 bg-gradient-to-r ${project.color} hover:shadow-lg text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 text-sm group-hover/card:shadow-xl group-hover/card:scale-105 transform`}>
