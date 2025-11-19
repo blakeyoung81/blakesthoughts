@@ -173,20 +173,6 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
     const baselineLift = currentViewport.height * (isMobile ? 0.12 : 0.08);
     return [0, floorY + scale[1] / 2 + baselineLift, targetDepth];
   }, [currentViewport.height, scale, targetDepth, isMobile]);
-  const { viewport, camera } = useThree();
-  const meshRef = useRef();
-  const isMobile = isMobileDevice();
-  const targetDepth = 5;
-  const currentViewport = useMemo(
-    () => viewport.getCurrentViewport(camera, [0, 0, targetDepth]),
-    [viewport, camera]
-  );
-  const scale = useMemo(() => getOptimizedImageSize(currentViewport, isMobile), [currentViewport, isMobile]);
-  const imagePosition: [number, number, number] = [
-    0,
-    -currentViewport.height / 2 + scale[1] / 2,
-    targetDepth,
-  ];
 
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
