@@ -46,9 +46,10 @@ const blakeProjects = [
                 category: "Medical Education",
                 tech: ["Healthcare", "Medical", "Education"],
                 color: "from-blue-500 to-cyan-600",
-                image: "https://image.thum.io/get/png/width/900/crop/800/https://ivymed.net",
+                image: "https://image.thum.io/get/width/1400/crop/1000/noanimate/https://ivymed.net",
                 imageAlt: "Ivy Med homepage screenshot",
-                imageBackground: "bg-slate-900/30"
+                imageBackground: "bg-slate-900/30",
+                        imageClass: "object-cover"
         },
         {
                 title: "Ivy Sprouts",
@@ -57,9 +58,10 @@ const blakeProjects = [
                 category: "Early Education",
                 tech: ["Children", "Development", "Learning"],
                 color: "from-purple-500 to-pink-600",
-                image: "https://image.thum.io/get/png/width/900/crop/800/https://ivysprouts.net",
+                image: "https://image.thum.io/get/width/1400/crop/1000/noanimate/https://ivysprouts.net",
                 imageAlt: "Ivy Sprouts learning hub preview",
-                imageBackground: "bg-slate-900/30"
+                imageBackground: "bg-slate-900/30",
+                        imageClass: "object-cover"
         },
         {
                 title: "Restoring Hope Clinic",
@@ -68,9 +70,10 @@ const blakeProjects = [
                 category: "Healthcare",
                 tech: ["Healthcare", "Community", "Wellness"],
                 color: "from-orange-500 to-red-600",
-                image: "https://image.thum.io/get/png/width/900/crop/800/https://restoringhopeclinic.org",
+                image: "https://image.thum.io/get/width/1400/crop/1000/noanimate/https://restoringhopeclinic.org",
                 imageAlt: "Restoring Hope Clinic website snapshot",
-                imageBackground: "bg-slate-900/30"
+                imageBackground: "bg-slate-900/30",
+                        imageClass: "object-cover"
         },
         {
                 title: "Board Buddy",
@@ -196,8 +199,8 @@ const blakeProjects = [
                                                                                 alt={project.imageAlt}
                                                                                 loading="lazy"
                                                                                 decoding="async"
-                                                                                referrerpolicy="no-referrer"
-                                                                                class="w-full h-44 sm:h-48 object-contain p-6"
+												referrerpolicy="no-referrer"
+												class={`w-full h-44 sm:h-48 ${project.imageClass ?? 'object-contain p-6'}`}
                                                                         />
                                                                 </div>
                                                                 <!-- Header -->
