@@ -6,12 +6,12 @@ export function isMobileDevice(): boolean {
 }
 
 export function getOptimizedImageSize(viewport: any, isMobile: boolean): [number, number] {
-  if (isMobile) {
-    // Smaller size for mobile
-    return [viewport.width * 0.7, viewport.height * 0.35];
-  }
-  // Desktop size
-  return [viewport.width * 0.45, viewport.height * 0.45];
+  const maxWidth = viewport.width * (isMobile ? 0.75 : 0.55);
+  const maxHeight = viewport.height * (isMobile ? 0.55 : 0.5);
+
+  // Keep the square planes safely within the viewport to avoid cropping
+  const targetSize = Math.min(maxWidth, maxHeight);
+  return [targetSize, targetSize];
 }
 
 export class ImageLoader {

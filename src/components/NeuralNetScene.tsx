@@ -170,7 +170,7 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
   );
   const imagePosition: [number, number, number] = useMemo(() => {
     const floorY = -currentViewport.height / 2;
-    const baselineLift = currentViewport.height * (isMobile ? 0.12 : 0.08);
+    const baselineLift = currentViewport.height * (isMobile ? 0.02 : 0.015);
     return [0, floorY + scale[1] / 2 + baselineLift, targetDepth];
   }, [currentViewport.height, scale, targetDepth, isMobile]);
 
