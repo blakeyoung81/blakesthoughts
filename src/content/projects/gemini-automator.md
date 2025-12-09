@@ -1,27 +1,26 @@
 ---
 title: "Gemini Automator"
-description: "Chrome extension that queues prompts and automates Google Gemini chats for faster creative workflows."
+description: "Chrome extension that automates Gemini prompts with queues, quick actions, and one-click downloads."
 pubDate: "2025-12-09"
-repo: "https://github.com/blakeyoung81/gemini-automator"
-liveDemo: "https://chromewebstore.google.com/detail/gemini-automator"
-tech: ["Chrome Extension", "Automation", "Gemini", "Productivity"]
-cover: "/images/projects/gemini-automator.svg"
+tech: ["Chrome Extension", "Automation", "Google Gemini"]
+liveDemo: "/privacy/gemini-automator"
+cover: "https://images.unsplash.com/photo-1521996319423-2a1c9f71c0f0?auto=format&fit=crop&w=1200&q=80"
 ---
 
-# Gemini Automator
+## Overview
 
-Gemini Automator streamlines your Google Gemini workflows by automating repetitive chat actions. You can stack prompts into a queue, let the extension type and submit them, and even trigger downloads for generated images. Everything happens locally in the browser, so sensitive prompts never leave your device.
+Gemini Automator streamlines repetitive Gemini workflows so you can focus on experimenting with prompts instead of clicking through the UI. The extension queues prompts, triggers send actions, and captures responses you specify without sending any of your data to external servers.
 
-## What it does
+## Key capabilities
 
-- Lets you preload and reorder a queue of prompts.
-- Automates typing, submission, and download steps so you can focus on reviewing results.
-- Keeps your workspace organized with saved settings in `chrome.storage.local`.
+- **Prompt queuing and playback:** Preload prompt batches and run them in sequence while you monitor results.
+- **Action automation:** Handle clicks, prompt submission, and response collection on the Gemini page for faster iteration.
+- **Local-first design:** Configuration and saved prompts stay in your browser via `chrome.storage.local` so nothing leaves your device.
 
-## Privacy-first automation
+## Privacy first
 
-The extension never transmits data to external servers. Prompt queues, settings, and any page interactions stay on-device. For more details, read the dedicated privacy policy linked below.
+The extension does not collect, transmit, or sell personal data. A dedicated privacy policy lives at the [Gemini Automator Privacy Policy](/privacy/gemini-automator), and all settings remain local to your browser.
 
-- [Privacy Policy](/privacy/gemini-automator)
-- [Chrome Web Store Listing](https://chromewebstore.google.com/detail/gemini-automator)
-- [Support](https://chromewebstore.google.com/detail/gemini-automator)
+## Contact
+
+For support or questions about the automation or privacy approach, reach out through the Chrome Web Store support channel.

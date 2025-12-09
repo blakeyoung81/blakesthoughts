@@ -51,12 +51,13 @@ if (entry) {
           <time datetime={pubDate.toISOString()} class="text-zinc-500">
             {formatDate(pubDate)}
           </time>
+
+          {entry.data.repo && (
+            <a href={entry.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+              View Repository
+            </a>
           )}
-          
-          <a href={entry.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-            View Repository
-          </a>
-          
+
           {entry.data.liveDemo && (
             <a href={entry.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
               Live Demo
