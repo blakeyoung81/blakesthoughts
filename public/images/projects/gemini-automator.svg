@@ -1,0 +1,29 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Gemini Automator cover art</title>
+  <desc id="desc">Abstract gradient background with the Gemini Automator name and a short tagline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="300" cy="180" r="220" fill="#22d3ee" opacity="0.08" />
+  <circle cx="900" cy="460" r="260" fill="#c084fc" opacity="0.08" />
+  <rect x="160" y="150" width="880" height="330" rx="32" fill="rgba(15,23,42,0.4)" stroke="url(#glow)" stroke-width="3" />
+  <text x="200" y="280" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="62" font-weight="700">
+    Gemini Automator
+  </text>
+  <text x="200" y="340" fill="#cbd5e1" font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="30" font-weight="500">
+    Queue prompts, automate Gemini chats, and keep everything on-device.
+  </text>
+  <text x="200" y="390" fill="#93c5fd" font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="24" font-weight="600">
+    Privacy-first · Chrome Extension · Automation
+  </text>
+</svg>
