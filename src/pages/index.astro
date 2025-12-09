@@ -7,6 +7,8 @@ import { MobileTopicCarousel } from '../components/MobileTopicCarousel.tsx';
 // Fetch all posts and derive a unique list of tags for the hero scene
 const allPosts = await getCollection('blog');
 
+const normalizeDate = (value) => (value instanceof Date ? value : new Date(value));
+
 // Extract tags more carefully
 const allTags = [];
 allPosts.forEach(post => {
@@ -22,9 +24,9 @@ const finalTopics = topics.length > 0 ? topics : ["Business", "Chess", "Coding",
 
 // Get the 3 most recent posts for the "Recent Writings" section
 const recentBlogPosts = allPosts
-	.filter(post => !post.data.draft)
-	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-	.slice(0, 3);
+        .filter(post => !post.data.draft)
+        .sort((a, b) => normalizeDate(b.data.pubDate).getTime() - normalizeDate(a.data.pubDate).getTime())
+        .slice(0, 3);
 
 // Define Blake's actual projects
 const blakeProjects = [
@@ -77,14 +79,14 @@ const blakeProjects = [
                         imageClass: "object-cover"
         },
         {
-                title: "Board Buddy",
-                description: "AI-powered study companion for medical students featuring problem solving, memory aids, and personalized tutoring personas.",
-                url: "https://www.boardcompanion.com/",
+                title: "BoardBuddy",
+                description: "AI-powered medical board companion for UWorld with question insights, recall prompts, and organized study summaries.",
+                url: "/projects/boardbuddy",
                 category: "Medical AI",
                 tech: ["AI", "Medical Education", "Chrome Extension"],
                 color: "from-indigo-500 to-purple-600",
                 image: "https://image.thum.io/get/png/width/900/crop/800/https://www.boardcompanion.com/",
-                imageAlt: "Board Buddy dashboard preview",
+                imageAlt: "BoardBuddy dashboard preview",
                 imageBackground: "bg-slate-900/30"
         },
         {
@@ -108,6 +110,18 @@ const blakeProjects = [
                 image: "https://image.thum.io/get/png/width/900/crop/800/https://chromewebstore.google.com/detail/colonist-buddy/mkbpkhkcggpopakinkdcbigocdjjbogp",
                 imageAlt: "Colonist Buddy Chrome Web Store listing preview",
                 imageBackground: "bg-slate-900/30"
+        },
+        {
+                title: "Gemini Automator",
+                description: "Chrome extension that queues prompts and automates Gemini interactions while keeping data on-device.",
+                url: "/projects/gemini-automator",
+                category: "Chrome Extension",
+                tech: ["Chrome", "Automation", "Gemini"],
+                color: "from-cyan-500 to-indigo-600",
+                image: "https://image.thum.io/get/png/width/900/crop/800/https://gemini.google.com",
+                imageAlt: "Gemini interface preview used by the Gemini Automator extension",
+                imageBackground: "bg-slate-900/30",
+                imageClass: "object-cover"
         }
 ];
 ---

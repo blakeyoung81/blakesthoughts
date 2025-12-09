@@ -15,6 +15,8 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 
+const pubDate = entry?.data.pubDate ? new Date(entry.data.pubDate) : null;
+
 // Format date
 const formatDate = (date) => {
   if (!date) return '';
@@ -45,9 +47,11 @@ if (entry) {
         </div>
         
         <div class="flex flex-wrap gap-4 text-sm">
-          <time datetime={entry.data.pubDate.toISOString()} class="text-zinc-500">
-            {formatDate(entry.data.pubDate)}
+          {pubDate && (
+          <time datetime={pubDate.toISOString()} class="text-zinc-500">
+            {formatDate(pubDate)}
           </time>
+          )}
           
           <a href={entry.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
             View Repository
