@@ -4,9 +4,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allProjects = await getCollection('projects');
 
+const normalizeDate = (value) => (value instanceof Date ? value : new Date(value));
+
 // Sort projects by date in descending order
 const sortedProjects = allProjects.sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+  (a, b) => normalizeDate(b.data.pubDate).getTime() - normalizeDate(a.data.pubDate).getTime()
 );
 
 // Format date function
@@ -71,22 +73,48 @@ const formatDate = (date) => {
                 <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
                   Live Demo
                 </a>
-              )}
+              </h2>
+
+              <div class="flex flex-wrap gap-2 mb-3">
+                {project.data.tech.map(tech => (
+                  <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
+                ))}
+              </div>
+
+              <div class="text-sm text-zinc-500 mb-4 flex gap-4">
+                {pubDate && (
+                  <time datetime={pubDate.toISOString()}>
+                    {formatDate(pubDate)}
+                  </time>
+                )}
+
+                {project.data.repo && (
+                  <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                    Repository
+                  </a>
+                )}
+
+                {project.data.liveDemo && (
+                  <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                    Live Demo
+                  </a>
+                )}
+              </div>
+
+              <p class="text-zinc-600 dark:text-zinc-400 mb-4">
+                {project.data.description}
+              </p>
+
+              <a href={`/projects/${project.slug}`} class="text-accent hover:underline inline-flex items-center">
+                View project details
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="ml-1">
+                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+              </a>
             </div>
-            
-            <p class="text-zinc-600 dark:text-zinc-400 mb-4">
-              {project.data.description}
-            </p>
-            
-            <a href={`/projects/${project.slug}`} class="text-accent hover:underline inline-flex items-center">
-              View project details
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="ml-1">
-                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-              </svg>
-            </a>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </div>
   </div>
 </BaseLayout> 

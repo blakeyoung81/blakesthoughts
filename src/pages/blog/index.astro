@@ -4,6 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allBlogPosts = await getCollection('blog');
 
+const normalizeDate = (value) => (value instanceof Date ? value : new Date(value));
+
 // Add slug to each post since getCollection doesn't provide it automatically
 const postsWithSlugs = allBlogPosts.map(post => ({
 	...post,
@@ -12,8 +14,8 @@ const postsWithSlugs = allBlogPosts.map(post => ({
 
 // Filter posts based on environment and sort by date in descending order
 const sortedPosts = postsWithSlugs
-	.filter(post => import.meta.env.PROD ? !post.data.draft : true)
-	.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+        .filter(post => import.meta.env.PROD ? !post.data.draft : true)
+        .sort((a, b) => normalizeDate(b.data.pubDate).getTime() - normalizeDate(a.data.pubDate).getTime());
 
 // Format date function
 const formatDate = (date) => {
@@ -64,19 +66,21 @@ const formatDate = (date) => {
 				];
 				const colorClass = colorClasses[index % colorClasses.length];
 				
-				return (
-					<article class={`group relative overflow-hidden rounded-3xl bg-gradient-to-br ${colorClass} p-1 transform hover:scale-105 transition-all duration-500 hover:rotate-1`}>
-						<div class="relative h-full bg-white dark:bg-gray-900 rounded-2xl p-8 flex flex-col">
-							<!-- Decorative elements -->
-							<div class="absolute top-4 right-4 w-12 h-12 opacity-20">
-								<div class={`w-full h-full bg-gradient-to-br ${colorClass} rounded-full animate-spin`} style={`animation-duration: ${(index + 1) * 3}s;`}></div>
-							</div>
+                                const publishedDate = normalizeDate(post.data.pubDate);
+
+                                return (
+                                        <article class={`group relative overflow-hidden rounded-3xl bg-gradient-to-br ${colorClass} p-1 transform hover:scale-105 transition-all duration-500 hover:rotate-1`}>
+                                                <div class="relative h-full bg-white dark:bg-gray-900 rounded-2xl p-8 flex flex-col">
+                                                        <!-- Decorative elements -->
+                                                        <div class="absolute top-4 right-4 w-12 h-12 opacity-20">
+                                                                <div class={`w-full h-full bg-gradient-to-br ${colorClass} rounded-full animate-spin`} style={`animation-duration: ${(index + 1) * 3}s;`}></div>
+                                                        </div>
 							
 							<!-- Date badge -->
-							<div class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${colorClass} mb-4 w-fit`}>
-								<time datetime={post.data.pubDate.toISOString()}>
-									{formatDate(post.data.pubDate)}
-								</time>
+                                                        <div class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${colorClass} mb-4 w-fit`}>
+                                                                <time datetime={publishedDate.toISOString()}>
+                                                                        {formatDate(publishedDate)}
+                                                                </time>
 								{post.data.draft && 
 									<span class="ml-2 bg-white/20 px-2 py-0.5 rounded-full">
 										DRAFT
