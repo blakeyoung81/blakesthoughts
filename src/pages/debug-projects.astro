@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content'
+
+let projects
+let error
+
+try {
+    projects = await getCollection('projects')
+} catch (e) {
+    error = e.message
+}
+---
+
+<html>
+    <body>
+        <h1>Debug Projects</h1>
+        {
+            error && (
+                <div style="color: red; border: 1px solid red; padding: 1rem; margin-bottom: 1rem;">
+                    <h2>Error Loading Collection</h2>
+                    <pre>{error}</pre>
+                    <p>Check console logs for full stack trace.</p>
+                </div>
+            )
+        }
+
+        <div style="background: #f0f0f0; padding: 1rem;">
+            <h2>
+                Projects Collection ({projects ? projects.length : 0} items)
+            </h2>
+            <pre>{JSON.stringify(projects, null, 2)}</pre>
+        </div>
+    </body>
+</html>
