@@ -1,7 +1,7 @@
 import { z, defineCollection } from "astro:content";
 
 export const collections = {
-  blog: defineCollection({ 
+  blog: defineCollection({
     schema: z.object({
       title: z.string(),
       description: z.string(),
@@ -10,7 +10,7 @@ export const collections = {
       tags: z.array(z.string()).optional(),
     })
   }),
-  poetry: defineCollection({ 
+  poetry: defineCollection({
     schema: z.object({
       title: z.string(),
       description: z.string(),
@@ -26,10 +26,10 @@ export const collections = {
       pubDate: z.string().or(z.date()).optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).optional(),
-      repo: z.string().url().optional(),
+      repo: z.string().optional(),
       tech: z.array(z.string()).optional(),
       cover: z.string().optional(),
-      liveDemo: z.string().url().optional(),
+      liveDemo: z.string().optional(),
     }),
   }),
 }; 
