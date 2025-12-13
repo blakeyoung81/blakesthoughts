@@ -10,6 +10,10 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://blakesthoughts.com',
   output: 'static',
+  trailingSlash: 'never',
+  build: {
+    format: 'file',
+  },
   adapter: vercel(),
   integrations: [tailwind(), sitemap(), mdx(), react()],
   markdown: {
