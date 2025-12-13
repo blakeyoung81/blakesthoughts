@@ -3,7 +3,7 @@ title: "Gemini Automator"
 description: "A powerful Chrome extension that supercharges your Google Gemini experience with automation queues and bulk processing."
 pubDate: "2025-02-14"
 repo: "https://github.com/blakeyoung81/gemini-automator"
-liveDemo: "#"
+
 tech: ["Chrome Extension", "JavaScript", "Automation", "Google Gemini"]
 cover: "/images/projects/gemini-automator-hero.png"
 ---
