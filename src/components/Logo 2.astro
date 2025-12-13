@@ -1,0 +1,51 @@
+---
+// Logo.astro - Simple SVG logo with initials BY
+---
+
+<a href="/" class="group flex items-center space-x-4 transition-all duration-300 hover:scale-105">
+  <!-- Epic logo icon -->
+  <div class="relative">
+    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+    <div class="relative bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 p-3 rounded-2xl shadow-2xl">
+      <svg 
+        viewBox="0 0 32 32" 
+        width="32" 
+        height="32" 
+        xmlns="http://www.w3.org/2000/svg"
+        class="text-white"
+      >
+        <!-- Artistic "B" -->
+        <path d="M4 4h12a6 6 0 0 1 6 6 6 6 0 0 1-6 6H4V4zm0 12h12a6 6 0 0 1 6 6 6 6 0 0 1-6 6H4v-12z" 
+              fill="currentColor" 
+              opacity="0.9" />
+        <!-- Artistic "Y" -->
+        <path d="M20 4h8l-4 12L28 28h-8l-4-12z" 
+              fill="currentColor" 
+              opacity="0.7" />
+        <!-- Decorative dots -->
+        <circle cx="26" cy="8" r="1.5" fill="currentColor" opacity="0.6" />
+        <circle cx="14" cy="18" r="1" fill="currentColor" opacity="0.5" />
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Epic logo text -->
+  <div class="hidden sm:block">
+    <div class="text-2xl font-black leading-tight">
+      <span class="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:from-cyan-300 group-hover:via-purple-300 group-hover:to-pink-300 transition-all duration-300">
+        Blake's
+      </span>
+      <br>
+      <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:via-pink-300 group-hover:to-rose-300 transition-all duration-300">
+        Thoughts
+      </span>
+    </div>
+  </div>
+  
+  <!-- Mobile version -->
+  <div class="sm:hidden">
+    <span class="text-xl font-black bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+      BT
+    </span>
+  </div>
+</a> 

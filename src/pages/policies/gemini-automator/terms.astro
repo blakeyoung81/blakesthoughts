@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+
+const title = 'Terms of Service - Gemini Automator'
+const lastUpdated = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+})
+---
+
+<BaseLayout title={title}>
+    <main
+        class="max-w-4xl mx-auto px-4 py-12 sm:py-20 bg-zinc-50 dark:bg-zinc-900 rounded-2xl my-8"
+    >
+        <h1 class="text-4xl font-bold mb-4 gradient-text">{title}</h1>
+        <p class="text-zinc-600 dark:text-zinc-400 mb-8">
+            Last Updated: {lastUpdated}
+        </p>
+
+        <div class="prose prose-zinc dark:prose-invert max-w-none">
+            <h3>1. Agreement to Terms</h3>
+            <p>
+                By downloading, installing, or using the Gemini Automator Chrome
+                Extension, you agree to be bound by these Terms of Service. If
+                you do not agree to these terms, please do not use the
+                extension.
+            </p>
+
+            <h3>2. License Grant</h3>
+            <p>
+                We grant you a personal, non-exclusive, non-transferable,
+                limited license to use the Gemini Automator extension for your
+                personal, non-commercial purposes strictly in accordance with
+                these Terms.
+            </p>
+
+            <h3>3. Prohibited Uses</h3>
+            <p>You agree not to use the extension to:</p>
+            <ul>
+                <li>Violate any applicable laws or regulations.</li>
+                <li>
+                    Violate the Terms of Service of Google Gemini or any other
+                    Google service.
+                </li>
+                <li>Distribute spam or malicious content.</li>
+                <li>
+                    Attempt to reverse engineer, decompile, or disassemble the
+                    extension.
+                </li>
+            </ul>
+
+            <h3>4. Disclaimer of Warranties</h3>
+            <p>
+                The extension is provided "AS IS" and "AS AVAILABLE" without
+                warranties of any kind, either express or implied. We do not
+                guarantee that the extension will function without interruption
+                or errors. In particular, changes to the Google Gemini website
+                structure may temporarily break the extension's functionality.
+            </p>
+
+            <h3>5. Limitation of Liability</h3>
+            <p>
+                In no event shall Blake Young be liable for any indirect,
+                incidental, special, consequential or punitive damages,
+                including without limitation, loss of profits, data, use,
+                goodwill, or other intangible losses, resulting from your access
+                to or use of or inability to access or use the extension.
+            </p>
+
+            <h3>6. Changes to Terms</h3>
+            <p>
+                We reserve the right, at our sole discretion, to modify or
+                replace these Terms at any time. By continuing to access or use
+                our extension after those revisions become effective, you agree
+                to be bound by the revised terms.
+            </p>
+
+            <h3>7. Contact Us</h3>
+            <p>
+                If you have any questions about these Terms, please contact us
+                at <a href="mailto:contact@blakesthoughts.com"
+                    >contact@blakesthoughts.com</a
+                >.
+            </p>
+        </div>
+    </main>
+</BaseLayout>

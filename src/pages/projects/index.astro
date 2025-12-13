@@ -60,13 +60,11 @@ const formatDate = (date) => {
               <time datetime={project.data.pubDate.toISOString()}>
                 {formatDate(project.data.pubDate)}
               </time>
-
-              {project.data.repo && (
-                <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-                  Repository
-                </a>
-              )}
-
+              
+              <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                Repository
+              </a>
+              
               {project.data.liveDemo && (
                 <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
                   Live Demo

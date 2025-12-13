@@ -1,9 +1,42 @@
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, useEffect, Suspense, Component, ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Text, Image, Stars } from '@react-three/drei';
+import { Text, Image as DreiImage, Stars } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
-import { ImageLoader, isMobileDevice, getOptimizedImageSize } from '../utils/imageOptimization';
+import { ImageLoader, isMobileDevice, getOptimizedImageSize, getTopicImagePath } from '../utils/imageOptimization';
+
+interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: any) {
+    console.error("NeuralNetScene Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      if (this.props.fallback) return this.props.fallback;
+      return null; // Fail silently but don't crash proper
+    }
+    return this.props.children;
+  }
+}
 
 interface WordProps {
   topic: string;
@@ -12,46 +45,51 @@ interface WordProps {
 }
 
 function Word({ topic, onHover, onLeave, ...props }: WordProps) {
-  const ref = useRef();
+  const ref = useRef<any>(null);
 
-  const [{ basePosition, phase, amplitude, speed }] = useMemo(() => {
+  const [initialPosition, velocity, sin, cos] = useMemo(() => {
     // Truly random initial position in 3D space around the sphere
     const radius = 25 + Math.random() * 10; // Random radius between 25-35
     const phi = Math.random() * Math.PI; // Random angle 0 to π
     const theta = Math.random() * 2 * Math.PI; // Random angle 0 to 2π
 
-    const basePosition = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
-
-    return [{
-      basePosition,
-      phase: {
-        x: Math.random() * Math.PI * 2,
-        y: Math.random() * Math.PI * 2,
-        z: Math.random() * Math.PI * 2,
-      },
-      amplitude: 2 + Math.random() * 1.5, // Slight variance so words don't move in sync
-      speed: 0.2 + Math.random() * 0.15,
-    }];
+    const initialPos = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
+    const velocity = new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
+    const sin = Math.random() * 2 * Math.PI;
+    const cos = Math.random() * 2 * Math.PI;
+    return [initialPos, velocity, sin, cos];
   }, []);
+
+  // Set initial position only once
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.position.copy(initialPosition);
+    }
+  }, [initialPosition]);
 
   useFrame(({ clock }) => {
     if (!ref.current) return;
 
-    const time = clock.getElapsedTime() * speed;
-
-    const offsetX = Math.sin(time + phase.x) * amplitude;
-    const offsetY = Math.cos(time * 0.8 + phase.y) * (amplitude * 0.6);
-    const offsetZ = Math.sin(time * 1.1 + phase.z) * (amplitude * 0.8);
-
-    ref.current.position.set(
-      basePosition.x + offsetX,
-      basePosition.y + offsetY,
-      basePosition.z + offsetZ
-    );
+    const time = clock.getElapsedTime() * 0.1;
+    // Just add gentle floating motion to the current position
+    ref.current.position.x += Math.sin(time + sin) * 0.01;
+    ref.current.position.y += Math.cos(time + cos) * 0.01;
+    ref.current.position.z += Math.sin(time + cos) * 0.01;
   });
 
   const handleClick = () => {
-    const url = `/topics/${topic.toLowerCase().replace(/ /g, '-')}`;
+    const lowerTopic = topic.toLowerCase();
+    if (lowerTopic === 'software') {
+      window.location.href = 'https://github.com/blakeyoung81';
+      return;
+    }
+    if (lowerTopic === 'chess') {
+      window.location.href = 'https://www.chess.com/member/steamedhams81';
+      return;
+    }
+
+    // Default behavior for other topics
+    const url = `/blog/${lowerTopic.replace(/ /g, '-')}`;
     window.location.href = url;
   };
 
@@ -74,6 +112,7 @@ function Word({ topic, onHover, onLeave, ...props }: WordProps) {
       color="white"
       anchorX="center"
       anchorY="middle"
+      font="/fonts/atkinson-regular.woff"
       onClick={handleClick}
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
@@ -95,11 +134,11 @@ function Cloud({ topics, radius, onWordHover, onWordLeave }: CloudProps) {
   return (
     <>
       {topics.map((topic, i) => (
-        <Word 
-          key={`${topic}-${i}`} 
-          topic={topic} 
-          onHover={onWordHover} 
-          onLeave={onWordLeave} 
+        <Word
+          key={`${topic}-${i}`}
+          topic={topic}
+          onHover={onWordHover}
+          onLeave={onWordLeave}
         />
       ))}
     </>
@@ -107,28 +146,28 @@ function Cloud({ topics, radius, onWordHover, onWordLeave }: CloudProps) {
 }
 
 function FlickeringStars() {
-  const starsRef = useRef();
+  const starsRef = useRef<any>(null);
   const [flickerOffsets] = useState(() => Array.from({ length: 3 }, () => Math.random() * 100));
   const isMobile = isMobileDevice();
-  
+
   useFrame(({ clock }) => {
     if (!starsRef.current) return;
-    
+
     const time = clock.getElapsedTime();
-    
+
     // Reduced flickering for better performance
     const flicker1 = Math.sin(time * 4 + flickerOffsets[0]) * 0.2;
     const flicker2 = Math.sin(time * 7.5 + flickerOffsets[1]) * 0.15;
     const flicker3 = Math.sin(time * 12 + flickerOffsets[2]) * 0.1;
-    
+
     const combinedFlicker = 0.5 + flicker1 + flicker2 + flicker3;
     const rotationSpeed = time * 0.01;
-    
+
     // Apply rotation for gentle movement
     starsRef.current.rotation.x = rotationSpeed * 0.1;
     starsRef.current.rotation.y = rotationSpeed * 0.05;
     starsRef.current.rotation.z = rotationSpeed * 0.02;
-    
+
     // Apply flickering by modifying the material opacity
     if (starsRef.current.material) {
       starsRef.current.material.opacity = Math.max(0.2, Math.min(1.0, combinedFlicker));
@@ -137,14 +176,14 @@ function FlickeringStars() {
   });
 
   return (
-    <Stars 
+    <Stars
       ref={starsRef}
-      radius={120} 
-      depth={80} 
+      radius={120}
+      depth={80}
       count={isMobile ? 6000 : 10000} // Fewer stars on mobile
-      factor={8} 
-      saturation={0} 
-      fade 
+      factor={8}
+      saturation={0}
+      fade
       speed={0.2}
     />
   );
@@ -154,25 +193,96 @@ interface BlakeImageProps {
   imageUrl: string;
 }
 
+// Global cache for image dimensions to prevent layout thrashing/reloading
+const imageDimensionCache = new Map<string, number>(); // url -> aspect ratio
+
 function BlakeImage({ imageUrl }: BlakeImageProps) {
-  const { viewport, camera, size } = useThree();
-  const meshRef = useRef();
+  const { viewport } = useThree();
+  const meshRef = useRef<any>(null);
   const isMobile = isMobileDevice();
-  const targetDepth = 5;
-  const targetVector = useMemo(() => new THREE.Vector3(0, 0, targetDepth), [targetDepth]);
-  const currentViewport = useMemo(
-    () => viewport.getCurrentViewport(camera, targetVector),
-    [viewport, camera, targetVector, size.width, size.height]
-  );
-  const scale = useMemo(
-    () => getOptimizedImageSize(currentViewport, isMobile),
-    [currentViewport, isMobile]
-  );
-  const imagePosition: [number, number, number] = useMemo(() => {
-    const floorY = -currentViewport.height / 2;
-    const baselineLift = currentViewport.height * (isMobile ? 0.02 : 0.015);
-    return [0, floorY + scale[1] / 2 + baselineLift, targetDepth];
-  }, [currentViewport.height, scale, targetDepth, isMobile]);
+  const [imageAspect, setImageAspect] = useState(() => {
+    // Initial state from cache if available
+    return imageDimensionCache.get(imageUrl) || 1;
+  });
+  const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
+  const [imageError, setImageError] = useState(false);
+
+  // Update image URL when prop changes
+  useEffect(() => {
+    setCurrentImageUrl(imageUrl);
+    setImageError(false);
+
+    // Check cache first
+    const cachedAspect = imageDimensionCache.get(imageUrl);
+    if (cachedAspect) {
+      setImageAspect(cachedAspect);
+      return;
+    }
+
+    // Load image to get its natural dimensions
+    const img = new Image();
+    // Only set crossOrigin if needed (different origin)
+    if (typeof window !== 'undefined' && imageUrl.startsWith('http') && !imageUrl.startsWith(window.location.origin)) {
+      img.crossOrigin = 'anonymous';
+    }
+    img.onload = () => {
+      const aspect = img.width / img.height;
+      imageDimensionCache.set(imageUrl, aspect); // Cache it
+      setImageAspect(aspect);
+    };
+    img.onerror = () => {
+      console.warn('Failed to load image:', imageUrl);
+      // Fallback logic remains similar but simplified for brevity
+      if (imageUrl.includes(' ')) {
+        const pathParts = imageUrl.split('/');
+        const encodedParts = pathParts.map(part => part.includes(' ') ? encodeURIComponent(part) : part);
+        const encodedUrl = encodedParts.join('/');
+        const fallbackImg = new Image();
+        if (typeof window !== 'undefined' && encodedUrl.startsWith('/')) {
+          fallbackImg.src = `${window.location.origin}${encodedUrl}`;
+        } else {
+          fallbackImg.src = encodedUrl;
+        }
+        fallbackImg.onload = () => {
+          const aspect = fallbackImg.width / fallbackImg.height;
+          imageDimensionCache.set(encodedUrl, aspect);
+          setCurrentImageUrl(encodedUrl);
+          setImageAspect(aspect);
+        };
+        fallbackImg.onerror = () => {
+          console.warn('Failed to load encoded image:', encodedUrl);
+          setImageError(true);
+        };
+      } else {
+        setImageError(true);
+      }
+    };
+    // Use absolute URL for loading test
+    if (typeof window !== 'undefined' && imageUrl.startsWith('/')) {
+      img.src = `${window.location.origin}${imageUrl}`;
+    } else {
+      img.src = imageUrl;
+    }
+  }, [imageUrl]);
+
+  // Calculate scale so image extends flush to bottom
+  // Updated constraints per user feedback: "Bigger" and "Start at bottom"
+  const availableHeight = viewport.height;
+
+  // Allow much wider images
+  const maxWidth = viewport.width * 1.5;
+  const maxHeight = availableHeight * 0.9; // Use up to 90% of screen height
+
+  // Calculate scale
+  let height = maxHeight;
+  let width = maxHeight * imageAspect;
+
+  if (width > maxWidth) {
+    width = maxWidth;
+    height = maxWidth / imageAspect;
+  }
+
+  const scale: [number, number] = [width, height];
 
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
@@ -184,23 +294,39 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
       meshRef.current.material.needsUpdate = true;
     }
   });
-  
+
+  // Ensure URL is absolute for proper loading (only in browser)
+  // For static files with spaces, we need to encode them in the URL
+  let absoluteImageUrl: string;
+  if (typeof window !== 'undefined') {
+    if (currentImageUrl.startsWith('/')) {
+      const encodedPath = currentImageUrl.split('/').map(segment =>
+        segment.includes(' ') ? encodeURIComponent(segment) : segment
+      ).join('/');
+      absoluteImageUrl = `${window.location.origin}${encodedPath}`;
+    } else {
+      absoluteImageUrl = currentImageUrl;
+    }
+  } else {
+    absoluteImageUrl = currentImageUrl;
+  }
+
+  // Don't render if image failed to load (except default)
+  if (imageError && currentImageUrl !== '/images/topics/Default.png') {
+    return null;
+  }
+
   return (
-    <Image
+    <DreiImage
       ref={meshRef}
-      key={imageUrl}
-      url={imageUrl}
+      url={absoluteImageUrl}
       scale={scale}
-      position={imagePosition}
-      transparent={true}
+      // Position: center x=0. y = bottom of view (-height/2) + half image height (since pivot is center)
+      // This anchors the bottom of the image to the bottom of the viewport
+      position={[0, -viewport.height / 2 + height / 2, 5]}
+      transparent
       alphaTest={0.001}
       depthWrite={false}
-      // Performance optimizations
-      crossOrigin="anonymous"
-      premultiplyAlpha={false}
-      generateMipmaps={false}
-      minFilter={THREE.LinearFilter}
-      magFilter={THREE.LinearFilter}
     />
   );
 }
@@ -210,94 +336,111 @@ interface NeuralNetSceneProps {
 }
 
 export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
-    const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
-    const [preloadedImages, setPreloadedImages] = useState(new Set());
-    const [isReady, setIsReady] = useState(false);
-    const imageLoader = useRef(new ImageLoader());
+  const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
+  const [preloadedImages, setPreloadedImages] = useState(new Set());
+  const [isReady, setIsReady] = useState(true); // Start ready - don't wait for images
+  const imageLoader = useRef(new ImageLoader());
 
-    // Preload critical images first, then the rest
-    useEffect(() => {
-        const preloadImages = async () => {
-            if (topics.length === 0) {
-                setIsReady(true);
-                return;
-            }
+  // Debug: Log topics to ensure they're being passed
+  useEffect(() => {
+    if (topics.length > 0) {
+      console.log('NeuralNetScene: Topics loaded:', topics);
+    } else {
+      console.warn('NeuralNetScene: No topics provided');
+    }
+  }, [topics]);
 
-            try {
-                // Preload default image first
-                await imageLoader.current.preloadImage('/images/topics/Default.png');
-                setIsReady(true);
-
-                // Preload the first few topic images
-                const priorityTopics = topics.slice(0, 3);
-                const priorityUrls = priorityTopics.map(topic => `/images/topics/${topic}.png`);
-                await imageLoader.current.preloadImages(priorityUrls);
-                
-                // Preload remaining images in the background
-                const remainingTopics = topics.slice(3);
-                const remainingUrls = remainingTopics.map(topic => `/images/topics/${topic}.png`);
-                if (remainingUrls.length > 0) {
-                    imageLoader.current.preloadImages(remainingUrls).catch(() => {
-                        // Silently fail for background preloading
-                    });
-                }
-
-                setPreloadedImages(new Set(topics));
-            } catch (error) {
-                console.warn('Some images failed to preload:', error);
-                setIsReady(true); // Continue even if preload fails
-            }
-        };
-
-        preloadImages();
-    }, [topics]);
-
-    const handleWordHover = (topic: string) => {
-      setImageUrl(`/images/topics/${topic}.png`);
-    };
-
-    const handleWordLeave = () => {
-      setImageUrl('/images/topics/Default.png');
-    };
-
-    if (!isReady) {
-        return (
-            <div className="w-full h-full flex items-center justify-center">
-                <div className="text-white text-xl animate-pulse">Loading...</div>
-            </div>
-        );
+  // Preload images in background (non-blocking)
+  useEffect(() => {
+    if (topics.length === 0) {
+      return;
     }
 
+    // Try to preload images, but don't block rendering if they fail
+    // Images are optional - the floating words should always render
+    const preloadImages = async () => {
+      try {
+        // Try to preload default image (non-blocking)
+        imageLoader.current.preloadImage('/images/topics/Default.png').catch(() => {
+          // Silently fail - images are optional
+        });
+
+        // Preload topic images in background (non-blocking)
+        const topicUrls = topics.map(topic => getTopicImagePath(topic));
+        imageLoader.current.preloadImages(topicUrls).catch(() => {
+          // Silently fail - images are optional
+        });
+
+        setPreloadedImages(new Set(topics));
+      } catch (error) {
+        // Silently fail - continue without images
+        // The floating words will still render
+      }
+    };
+
+    preloadImages();
+  }, [topics]);
+
+  const handleWordHover = (topic: string) => {
+    // Set topic image immediately
+    const topicImageUrl = getTopicImagePath(topic);
+    setImageUrl(topicImageUrl);
+
+    // Try to preload it in the background for next time
+    imageLoader.current.preloadImage(topicImageUrl).catch(() => {
+      // Silently fail - image will still try to load via the Image component
+    });
+  };
+
+  const handleWordLeave = () => {
+    setImageUrl('/images/topics/Default.png');
+  };
+
+  if (!isReady) {
     return (
-        <Canvas 
-          gl={{ 
-            alpha: true, 
-            antialias: false, // Disable for better performance
+      <div className="w-full h-full flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
+        <div className="text-white text-xl animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
+      <ErrorBoundary fallback={null}>
+        <Canvas
+          style={{ width: '100%', height: '100%', display: 'block' }}
+          gl={{
+            alpha: true,
+            antialias: true,
             premultipliedAlpha: false,
-            preserveDrawingBuffer: false, // Disable for better performance
+            preserveDrawingBuffer: false,
             powerPreference: "high-performance",
             stencil: false,
             depth: true
-          }} 
+          }}
           camera={{ position: [0, 0, 30], fov: 75 }}
-          dpr={[1, 1.5]} // Lower max DPR for better performance
-          performance={{ min: 0.5 }} // Reduce quality if FPS drops below 30
+          dpr={[1, 1.5]}
+          performance={{ min: 0.5 }}
         >
+          <ambientLight intensity={0.7} />
+          <pointLight position={[10, 10, 10]} intensity={0.5} />
+
+          <Suspense fallback={null}>
             <FlickeringStars />
-            <BlakeImage imageUrl={imageUrl} />
+            <Suspense fallback={null}>
+              <BlakeImage imageUrl={imageUrl} />
+            </Suspense>
             {topics.length > 0 && (
-              <Cloud 
+              <Cloud
                 topics={topics}
-                radius={28} 
+                radius={28}
                 onWordHover={handleWordHover}
                 onWordLeave={handleWordLeave}
               />
             )}
-            <ambientLight intensity={0.7} />
-            <pointLight position={[10, 10, 10]} intensity={0.5} />
-            <EffectComposer>
-                <Bloom luminanceThreshold={0.1} intensity={0.7} levels={7} mipmapBlur />
-            </EffectComposer>
+          </Suspense>
         </Canvas>
-    );
-} 
+      </ErrorBoundary>
+    </div>
+  );
+}

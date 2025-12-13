@@ -1,26 +1,49 @@
 ---
 title: "Gemini Automator"
-description: "Chrome extension that automates Gemini prompts with queues, quick actions, and one-click downloads."
-pubDate: "2025-12-09"
-tech: ["Chrome Extension", "Automation", "Google Gemini"]
-liveDemo: "/privacy/gemini-automator"
-cover: "https://images.unsplash.com/photo-1521996319423-2a1c9f71c0f0?auto=format&fit=crop&w=1200&q=80"
+description: "A powerful Chrome extension that supercharges your Google Gemini experience with automation queues and bulk processing."
+pubDate: "2025-02-14"
+repo: "https://github.com/blakeyoung81/gemini-automator"
+liveDemo: "#"
+tech: ["Chrome Extension", "JavaScript", "Automation", "Google Gemini"]
+cover: "/images/projects/gemini-automator-hero.png"
 ---
 
-## Overview
+# Gemini Automator
 
-Gemini Automator streamlines repetitive Gemini workflows so you can focus on experimenting with prompts instead of clicking through the UI. The extension queues prompts, triggers send actions, and captures responses you specify without sending any of your data to external servers.
+Gemini Automator is a Chrome extension designed to streamline your workflow with Google's Gemini AI. It introduces a robust queueing system that allows you to batch process prompts, automate interactions, and manage generated content efficiently.
 
-## Key capabilities
+## Key Features
 
-- **Prompt queuing and playback:** Preload prompt batches and run them in sequence while you monitor results.
-- **Action automation:** Handle clicks, prompt submission, and response collection on the Gemini page for faster iteration.
-- **Local-first design:** Configuration and saved prompts stay in your browser via `chrome.storage.local` so nothing leaves your device.
+### Smart Queue System
+- **Batch Processing**: Add multiple prompts to a queue and let the extension handle them one by one.
+- **Persistence**: Your queue survives page reloads, ensuring you never lose your work.
+- **Status Tracking**: Visual indicators for pending, processing, and completed items.
 
-## Privacy first
+### Automation Tools
+- **Auto-Submission**: Automatically submits the next prompt in the queue when the previous one completes.
+- **Image Handling**: Automatically detects and downloads generated images.
+- **Error Recovery**: Intelligent retry mechanisms for network glitches or timeouts.
 
-The extension does not collect, transmit, or sell personal data. A dedicated privacy policy lives at the [Gemini Automator Privacy Policy](/privacy/gemini-automator), and all settings remain local to your browser.
+## How It Works
 
-## Contact
+The extension integrates directly into the Gemini web interface, adding a seamless control panel. Simply type your prompts, add them to the queue, and click start. The automator handles the rest, ensuring efficient use of your time and API limits.
 
-For support or questions about the automation or privacy approach, reach out through the Chrome Web Store support channel.
+## Installation
+
+This project is built as a standard Chrome Extension. You can load it in developer mode:
+
+1. Clone the repository
+2. Open Chrome Extensions (`chrome://extensions`)
+3. Enable "Developer Mode"
+4. Click "Load Unpacked" and select the extension directory
+
+## Future Roadmap
+
+- **Export History**: Save your chat history and generated assets locally.
+- **Custom Workflows**: Define multi-step prompt chains for complex tasks.
+- **Cross-Tab Sync**: Manage your queue across multiple Gemini tabs.
+
+## Legal
+
+- [Privacy Policy](/policies/gemini-automator/privacy)
+- [Terms of Service](/policies/gemini-automator/terms)

@@ -6,12 +6,14 @@ export function isMobileDevice(): boolean {
 }
 
 export function getOptimizedImageSize(viewport: any, isMobile: boolean): [number, number] {
-  const maxWidth = viewport.width * (isMobile ? 0.75 : 0.55);
-  const maxHeight = viewport.height * (isMobile ? 0.55 : 0.5);
-
-  // Keep the square planes safely within the viewport to avoid cropping
-  const targetSize = Math.min(maxWidth, maxHeight);
-  return [targetSize, targetSize];
+  // Calculate size based on viewport while maintaining aspect ratio
+  // Use a consistent aspect ratio approach to prevent clipping
+  const maxWidth = isMobile ? viewport.width * 0.8 : viewport.width * 0.5;
+  const maxHeight = isMobile ? viewport.height * 0.6 : viewport.height * 0.6;
+  
+  // Return as [width, height] - the Image component will maintain aspect ratio
+  // We use a square-ish ratio as base, but the actual image aspect will be preserved
+  return [maxWidth, maxHeight];
 }
 
 export class ImageLoader {
@@ -37,7 +39,10 @@ export class ImageLoader {
     // Start new load
     const loadPromise = new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = 'anonymous';
+      // Only set crossOrigin if URL is from different origin (browser only)
+      if (typeof window !== 'undefined' && url.startsWith('http') && !url.startsWith(window.location.origin)) {
+        img.crossOrigin = 'anonymous';
+      }
       
       img.onload = () => {
         this.cache.set(url, img);
@@ -69,5 +74,22 @@ export class ImageLoader {
     this.cache.clear();
     this.loading.clear();
   }
+}
+
+/**
+ * Get the correct image path for a topic name
+ * For static files, use the actual filename with spaces (not encoded)
+ * Vercel handles spaces in static file paths correctly
+ */
+export function getTopicImagePath(topic: string): string {
+  // Use the actual topic name with spaces - Vercel handles this correctly for static files
+  return `/images/topics/${topic}.png`;
+}
+
+/**
+ * Get encoded image path (for URL usage where encoding is needed)
+ */
+export function getTopicImagePathEncoded(topic: string): string {
+  return `/images/topics/${encodeURIComponent(topic)}.png`;
 }
 
