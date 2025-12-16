@@ -5,9 +5,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const allProjects = await getCollection('projects');
 
 // Sort projects by date in descending order
-const sortedProjects = allProjects.sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
-);
+const sortedProjects = allProjects.sort((a, b) => {
+  const dateA = a.data.pubDate ? new Date(a.data.pubDate).getTime() : 0;
+  const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
+  return dateB - dateA;
+});
 
 // Format date function
 const formatDate = (date) => {
@@ -29,11 +31,14 @@ const formatDate = (date) => {
     </div>
     
     <div class="space-y-12">
-      {sortedProjects.map((project) => (
+      {sortedProjects.map((project) => {
+        const slug = project.id.replace(/\.(md|mdx)$/, '');
+        const pubDate = project.data.pubDate ? new Date(project.data.pubDate) : null;
+        return (
         <article class="grid md:grid-cols-3 gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-12 last:border-0">
           {project.data.cover && (
             <div class="md:col-span-1">
-              <a href={`/projects/${project.slug}`}>
+              <a href={`/projects/${slug}`}>
                 <img 
                   src={project.data.cover} 
                   alt={project.data.title} 
@@ -45,25 +50,31 @@ const formatDate = (date) => {
           
           <div class={project.data.cover ? "md:col-span-2" : "md:col-span-3"}>
             <h2 class="text-2xl font-bold mb-2">
-              <a href={`/projects/${project.slug}`} class="hover:text-accent transition">
+              <a href={`/projects/${slug}`} class="hover:text-accent transition">
                 {project.data.title}
               </a>
             </h2>
             
-            <div class="flex flex-wrap gap-2 mb-3">
-              {project.data.tech.map(tech => (
-                <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
-              ))}
-            </div>
+            {project.data.tech && project.data.tech.length > 0 && (
+              <div class="flex flex-wrap gap-2 mb-3">
+                {project.data.tech.map(tech => (
+                  <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
+                ))}
+              </div>
+            )}
             
             <div class="text-sm text-zinc-500 mb-4 flex gap-4">
-              <time datetime={project.data.pubDate.toISOString()}>
-                {formatDate(project.data.pubDate)}
-              </time>
+              {pubDate && (
+                <time datetime={pubDate.toISOString()}>
+                  {formatDate(pubDate)}
+                </time>
+              )}
               
-              <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
-                Repository
-              </a>
+              {project.data.repo && (
+                <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                  Repository
+                </a>
+              )}
               
               {project.data.liveDemo && (
                 <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
@@ -76,7 +87,7 @@ const formatDate = (date) => {
               {project.data.description}
             </p>
             
-            <a href={`/projects/${project.slug}`} class="text-accent hover:underline inline-flex items-center">
+            <a href={`/projects/${slug}`} class="text-accent hover:underline inline-flex items-center">
               View project details
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="ml-1">
                 <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
@@ -84,7 +95,8 @@ const formatDate = (date) => {
             </a>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   </div>
 </BaseLayout> 

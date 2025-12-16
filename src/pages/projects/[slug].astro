@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 
 export const prerender = true
@@ -9,10 +9,14 @@ export async function getStaticPaths() {
   if (!projectEntries || projectEntries.length === 0) {
     return []
   }
-  return projectEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }))
+  return projectEntries.map((entry) => {
+    // Generate slug from the entry.id (filename without extension)
+    const slug = entry.id.replace(/\.(md|mdx)$/, '')
+    return {
+      params: { slug },
+      props: { entry },
+    }
+  })
 }
 
 const { entry } = Astro.props
@@ -28,8 +32,17 @@ const formatDate = (date) => {
 }
 
 let Content
-if (entry) {
-  ;({ Content } = await entry.render())
+let renderError = null
+
+try {
+  if (entry) {
+    const rendered = await render(entry)
+    Content = rendered.Content
+  } else {
+    renderError = 'No content available'
+  }
+} catch (error) {
+  renderError = error.message
 }
 ---
 
@@ -43,30 +56,36 @@ if (entry) {
             {entry.data.description}
           </p>
 
-          <div class="flex flex-wrap gap-2 mb-4">
-            {entry.data.tech.map((tech) => (
-              <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">
-                {tech}
-              </span>
-            ))}
-          </div>
+          {entry.data.tech && entry.data.tech.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-4">
+              {entry.data.tech.map((tech) => (
+                <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div class="flex flex-wrap gap-4 text-sm">
-            <time
-              datetime={entry.data.pubDate.toISOString()}
-              class="text-zinc-500"
-            >
-              {formatDate(entry.data.pubDate)}
-            </time>
+            {entry.data.pubDate && (
+              <time
+                datetime={new Date(entry.data.pubDate).toISOString()}
+                class="text-zinc-500"
+              >
+                {formatDate(entry.data.pubDate)}
+              </time>
+            )}
 
-            <a
-              href={entry.data.repo}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-accent hover:underline"
-            >
-              View Repository
-            </a>
+            {entry.data.repo && (
+              <a
+                href={entry.data.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent hover:underline"
+              >
+                View Repository
+              </a>
+            )}
 
             {entry.data.liveDemo && (
               <a
@@ -90,7 +109,18 @@ if (entry) {
         )}
 
         <div class="prose prose-zinc dark:prose-invert max-w-none">
-          <Content />
+          {
+            renderError ? (
+              <div class="bg-red-900/20 border border-red-500 text-red-200 p-4 rounded-lg">
+                <h3 class="font-bold">Content Rendering Error:</h3>
+                <p>{renderError}</p>
+              </div>
+            ) : Content ? (
+              <Content />
+            ) : (
+              <p>No content available</p>
+            )
+          }
         </div>
 
         <div class="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
