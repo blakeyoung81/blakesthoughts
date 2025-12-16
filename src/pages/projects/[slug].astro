@@ -49,28 +49,28 @@ try {
 <BaseLayout title={entry?.data.title ?? 'Project not found'}>
   {
     entry ? (
-      <article class="max-w-3xl mx-auto">
+      <article class="max-w-3xl mx-auto text-white">
         <div class="mb-8">
-          <h1 class="text-4xl font-bold mb-3">{entry.data.title}</h1>
-          <p class="text-zinc-600 dark:text-zinc-400 mb-4">
+          <h1 class="text-4xl font-bold mb-3 text-white">{entry.data.title}</h1>
+          <p class="text-white/90 mb-4">
             {entry.data.description}
           </p>
 
           {entry.data.tech && entry.data.tech.length > 0 && (
             <div class="flex flex-wrap gap-2 mb-4">
               {entry.data.tech.map((tech) => (
-                <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">
+                <span class="bg-white/10 border border-white/20 text-white text-xs px-2 py-1 rounded">
                   {tech}
                 </span>
               ))}
             </div>
           )}
 
-          <div class="flex flex-wrap gap-4 text-sm">
+          <div class="flex flex-wrap gap-4 text-sm text-white/80">
             {entry.data.pubDate && (
               <time
                 datetime={new Date(entry.data.pubDate).toISOString()}
-                class="text-zinc-500"
+                class="text-white/80"
               >
                 {formatDate(entry.data.pubDate)}
               </time>
@@ -81,7 +81,7 @@ try {
                 href={entry.data.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-accent hover:underline"
+                class="text-blue-400 hover:text-blue-300 hover:underline"
               >
                 View Repository
               </a>
@@ -92,7 +92,7 @@ try {
                 href={entry.data.liveDemo}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-accent hover:underline"
+                class="text-blue-400 hover:text-blue-300 hover:underline"
               >
                 Live Demo
               </a>
@@ -108,7 +108,7 @@ try {
           />
         )}
 
-        <div class="prose prose-zinc dark:prose-invert max-w-none">
+        <div class="prose prose-invert max-w-none prose-headings:text-white prose-p:text-white/90 prose-li:text-white/90 prose-strong:text-white prose-a:text-blue-400 prose-a:hover:text-blue-300 prose-code:text-white prose-pre:bg-white/10 prose-blockquote:text-white/80 prose-blockquote:border-blue-400">
           {
             renderError ? (
               <div class="bg-red-900/20 border border-red-500 text-red-200 p-4 rounded-lg">
@@ -118,15 +118,15 @@ try {
             ) : Content ? (
               <Content />
             ) : (
-              <p>No content available</p>
+              <p class="text-white/90">No content available</p>
             )
           }
         </div>
 
-        <div class="mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800">
+        <div class="mt-12 pt-8 border-t border-white/20">
           <a
             href="/projects"
-            class="flex items-center text-accent hover:underline"
+            class="flex items-center text-blue-400 hover:text-blue-300 hover:underline"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

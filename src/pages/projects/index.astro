@@ -22,10 +22,10 @@ const formatDate = (date) => {
 ---
 
 <BaseLayout title="Projects">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-4xl mx-auto text-white">
     <div class="mb-12">
-      <h1 class="text-4xl font-bold mb-4">Projects</h1>
-      <p class="text-xl text-zinc-700 dark:text-zinc-300">
+      <h1 class="text-4xl font-bold mb-4 text-white">Projects</h1>
+      <p class="text-xl text-white/90">
         Software, med-tech builds, and other technical explorations.
       </p>
     </div>
@@ -35,7 +35,7 @@ const formatDate = (date) => {
         const slug = project.id.replace(/\.(md|mdx)$/, '');
         const pubDate = project.data.pubDate ? new Date(project.data.pubDate) : null;
         return (
-        <article class="grid md:grid-cols-3 gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-12 last:border-0">
+        <article class="grid md:grid-cols-3 gap-6 border-b border-white/20 pb-12 last:border-0">
           {project.data.cover && (
             <div class="md:col-span-1">
               <a href={`/projects/${slug}`}>
@@ -49,8 +49,8 @@ const formatDate = (date) => {
           )}
           
           <div class={project.data.cover ? "md:col-span-2" : "md:col-span-3"}>
-            <h2 class="text-2xl font-bold mb-2">
-              <a href={`/projects/${slug}`} class="hover:text-accent transition">
+            <h2 class="text-2xl font-bold mb-2 text-white">
+              <a href={`/projects/${slug}`} class="text-white hover:text-blue-400 transition">
                 {project.data.title}
               </a>
             </h2>
@@ -58,36 +58,36 @@ const formatDate = (date) => {
             {project.data.tech && project.data.tech.length > 0 && (
               <div class="flex flex-wrap gap-2 mb-3">
                 {project.data.tech.map(tech => (
-                  <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-2 py-1 rounded">{tech}</span>
+                  <span class="bg-white/10 border border-white/20 text-white text-xs px-2 py-1 rounded">{tech}</span>
                 ))}
               </div>
             )}
             
-            <div class="text-sm text-zinc-500 mb-4 flex gap-4">
+            <div class="text-sm text-white/80 mb-4 flex gap-4">
               {pubDate && (
-                <time datetime={pubDate.toISOString()}>
+                <time datetime={pubDate.toISOString()} class="text-white/80">
                   {formatDate(pubDate)}
                 </time>
               )}
               
               {project.data.repo && (
-                <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                <a href={project.data.repo} target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">
                   Repository
                 </a>
               )}
               
               {project.data.liveDemo && (
-                <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">
+                <a href={project.data.liveDemo} target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 hover:underline">
                   Live Demo
                 </a>
               )}
             </div>
             
-            <p class="text-zinc-600 dark:text-zinc-400 mb-4">
+            <p class="text-white/90 mb-4">
               {project.data.description}
             </p>
             
-            <a href={`/projects/${slug}`} class="text-accent hover:underline inline-flex items-center">
+            <a href={`/projects/${slug}`} class="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center">
               View project details
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="ml-1">
                 <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
