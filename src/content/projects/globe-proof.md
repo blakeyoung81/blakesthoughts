@@ -5,6 +5,10 @@ pubDate: "2026-01-02"
 liveDemo: "https://globe-proof.vercel.app/earth"
 tech: ["Three.js", "React Three Fiber", "WebGL", "Interactive 3D"]
 cover: "/images/projects/globe-proof-hero.png"
+featured: true
+category: "Interactive 3D"
+color: "from-blue-600 to-indigo-500"
+order: 1
 ---
 
 # Globe Proof

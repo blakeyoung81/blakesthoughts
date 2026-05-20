@@ -5,6 +5,11 @@ pubDate: "2025-12-16"
 repo: "https://github.com/blakeyoung81/O2-Redesign"
 tech: ["HTML5", "CSS3", "JavaScript", "Glassmorphism", "Responsive Design"]
 cover: "/images/projects/o2-redesign-hero.png"
+featured: true
+category: "Web App Redesign"
+color: "from-blue-500 to-cyan-500"
+order: 2
+liveDemo: "https://o2-redesign-kb57hceqk-blakeyoung81s-projects.vercel.app/OASIS2.html"
 ---
 
 # O2 Student Portal Redesign

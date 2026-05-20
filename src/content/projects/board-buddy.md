@@ -5,6 +5,10 @@ pubDate: "2025-10-27"
 repo: "https://github.com/blakeyoung81/BoardBuddy"
 tech: ["Vanilla JS", "Node.js", "Express", "Supabase", "TMI.js", "OpenAI API", "Python"]
 cover: "/images/projects/board-buddy-hero.png"
+featured: true
+category: "Med-Tech / Software"
+color: "from-indigo-500 to-purple-600"
+order: 9
 ---
 
 # BoardBuddy - Medical Study Stream Platform

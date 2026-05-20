@@ -6,6 +6,10 @@ repo: "https://github.com/blakeyoung81/LuzBuddy"
 liveDemo: "https://luzbuddy.com"
 tech: ["Next.js", "TypeScript", "3D Graphics", "WebGL", "Smart Home"]
 cover: "/images/luzbuddy.png"
+featured: true
+category: "Smart Home"
+color: "from-violet-500 to-purple-600"
+order: 12
 ---
 
 # LuzBuddy Smart Home Control Center

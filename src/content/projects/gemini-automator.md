@@ -6,6 +6,10 @@ repo: "https://github.com/blakeyoung81/gemini-automator"
 
 tech: ["Chrome Extension", "JavaScript", "Automation", "Google Gemini"]
 cover: "/images/projects/gemini-automator-hero.png"
+featured: true
+category: "Chrome Extension"
+color: "from-blue-500 to-indigo-600"
+order: 3
 ---
 
 # Gemini Automator

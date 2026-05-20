@@ -40,6 +40,11 @@ const projects = defineCollection({
 		tech: z.array(z.string()).optional(),
 		cover: z.string().optional(),
 		liveDemo: z.string().optional(),
+		featured: z.boolean().optional(),
+		category: z.string().optional(),
+		color: z.string().optional(),
+		order: z.number().optional(),
+		url: z.string().optional(),
 	}),
 });
 

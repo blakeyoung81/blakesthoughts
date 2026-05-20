@@ -94,7 +94,8 @@ function Word({ topic, onHover, onLeave, ...props }: WordProps) {
     }
 
     // Default behavior for other topics
-    const url = `/blog/${lowerTopic.replace(/ /g, '-')}`;
+    const slug = lowerTopic.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const url = `/topics/${slug}`;
     window.location.href = url;
   };
 

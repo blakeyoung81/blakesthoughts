@@ -5,6 +5,10 @@ pubDate: "2026-02-15"
 repo: "https://github.com/blakeyoung81/Social-Sync"
 tech: ["Next.js", "React", "Python", "OpenAI API", "Pexels API", "Pixabay API", "OAuth"]
 cover: "/images/projects/social-sync-hero.png"
+featured: true
+category: "Med-Tech / Automation"
+color: "from-fuchsia-600 to-pink-500"
+order: 10
 ---
 
 # Social Sync Content Automation

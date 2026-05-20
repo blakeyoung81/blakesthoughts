@@ -39,6 +39,25 @@ export function MobileTopicCarousel({ topics = [] }) {
     // Use actual filename with spaces - Vercel handles this correctly for static files
     const imageUrl = `/images/topics/${currentTopic}.png`;
     
+    const handleClick = () => {
+        const lowerTopic = currentTopic.toLowerCase();
+        if (lowerTopic === 'software') {
+            window.location.href = 'https://github.com/blakeyoung81';
+            return;
+        }
+        if (lowerTopic === 'chess') {
+            window.location.href = 'https://www.chess.com/member/steamedhams81';
+            return;
+        }
+        if (lowerTopic === 'medical') {
+            window.location.href = '/resume';
+            return;
+        }
+
+        const slug = lowerTopic.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        window.location.href = `/topics/${slug}`;
+    };
+    
     return (
         <div className="relative w-full h-full flex flex-col items-center justify-center">
             {/* Background gradient */}
@@ -61,24 +80,27 @@ export function MobileTopicCarousel({ topics = [] }) {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-1 sm:mb-2">
                     Blake's Thoughts
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl font-semibold text-white/90 drop-shadow-md">
+                <p 
+                    className="text-lg sm:text-xl md:text-2xl font-semibold text-white/90 drop-shadow-md cursor-pointer hover:text-purple-300 transition-colors"
+                    onClick={handleClick}
+                >
                     {currentTopic}
                 </p>
             </div>
             
             {/* Main image in center - positioned to account for title and dots */}
-            <div className={`relative z-10 transition-opacity duration-500 ${fadeClass} w-full flex items-center justify-center`} style={{ 
+            <div className={`relative z-10 transition-opacity duration-500 ${fadeClass} w-full flex items-center justify-center cursor-pointer`} style={{ 
                 paddingTop: 'clamp(100px, 15vh, 140px)', 
                 paddingBottom: 'clamp(120px, 18vh, 160px)',
                 paddingLeft: '1rem',
                 paddingRight: '1rem',
                 minHeight: 0,
                 flex: 1
-            }}>
+            }} onClick={handleClick}>
                 <img 
                     src={imageUrl} 
                     alt={currentTopic}
-                    className="w-auto h-auto object-contain drop-shadow-2xl"
+                    className="w-auto h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300"
                     style={{ 
                         width: 'auto',
                         height: 'auto',
@@ -124,7 +146,8 @@ export function MobileTopicCarousel({ topics = [] }) {
             
             {/* Navigation arrows */}
             <button
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setFadeClass('opacity-0');
                     setTimeout(() => {
                         setCurrentIndex((prev) => (prev - 1 + topics.length) % topics.length);
@@ -139,8 +162,10 @@ export function MobileTopicCarousel({ topics = [] }) {
                 </svg>
             </button>
             
+            {/* Navigation arrows */}
             <button
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setFadeClass('opacity-0');
                     setTimeout(() => {
                         setCurrentIndex((prev) => (prev + 1) % topics.length);
@@ -158,7 +183,7 @@ export function MobileTopicCarousel({ topics = [] }) {
             {/* Tap to explore hint */}
             <div className={`absolute bottom-20 sm:bottom-24 left-0 right-0 z-20 text-center transition-opacity duration-500 ${fadeClass} px-4`}>
                 <p className="text-white/60 text-xs sm:text-sm font-medium animate-pulse">
-                    Tap arrows or swipe to explore topics
+                    Tap arrows to rotate or tap topic/image to view all entries
                 </p>
             </div>
         </div>
