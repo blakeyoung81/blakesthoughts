@@ -5,7 +5,7 @@ pubDate: "2025-04-21"
 repo: "https://github.com/blakeyoung/rag-med-tutor"
 liveDemo: "https://rag-demo-blake.vercel.app"
 tech: ["Python", "FAISS", "OpenAI API", "Next.js"]
-cover: "/images/rag-screenshot.png"
+cover: "/images/projects/rag-tutor-hero.png"
 featured: false
 category: "AI Integration"
 color: "from-emerald-600 to-teal-500"

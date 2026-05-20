@@ -13,16 +13,54 @@ order: 4
 
 # Ivy Tutoring
 
-**Ivy Tutoring** is a custom-built digital tutor matches and administration dashboard system that connects students with expert tutors.
+**Ivy Tutoring** is a custom-built digital tutor matching and administration system that connects students with expert, top-tier tutors.
 
-## 🎓 Core System Details
+---
 
-- **Tutor Matching Engine**: An automated matching algorithm utilizing student subject needs and tutor availability/credentials.
-- **Interactive Dashboards**: Clean, dedicated dashboards for parents, students, and tutors to monitor progress, set session schedules, and upload educational materials.
-- **Secure Payments & Scheduling**: Integrated booking systems ensuring smooth transaction handling and calendar syncs.
+## The Problem
 
-## 🛠️ Stack & Architecture
+Traditional tutoring agencies rely on manual matching, email coordination, and excel spreadsheets to pair students with tutors. This approach causes:
+1. Significant delays between a student's request and scheduling their first session.
+2. Inefficient schedule overlaps and calendar coordination issues.
+3. Lack of a unified space where parents, students, and tutors can share homework files, session notes, and log hourly progress.
 
-- **Next.js & React**: Modern front-end framework providing fast server-side rendering and responsive dashboards.
-- **Node.js**: Backend server handling business logic, user auth, and notifications.
-- **PostgreSQL**: Relational database managing student accounts, tutor profiles, session history, and matching filters.
+---
+
+## The Solution: Automated Matchmaking & Administration
+
+Ivy Tutoring automates matching and administrative workloads:
+- **Tutor Matching Engine**: An algorithmic matching process that calculates compatibility scores based on subject specialty, student age, grade level, schedule availability, and price tier.
+- **Unified Client-Tutor Portal**: A dashboard for students (and parents) to book sessions, download study resources, and view detailed tutor feedback.
+- **Administrative Control Deck**: A command panel for agency admins to monitor matches, track billing histories, and manage tutor onboarding documents.
+
+---
+
+## Technical Architecture
+
+The platform uses a classic decoupled Next.js web portal linked to a robust relational database:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                   Next.js Web Client                   │
+├────────────────────────────────────────────────────────┤
+│  Client Dashboards, Matching Forms, Scheduling Calendar│
+└───────────────────────────┬────────────────────────────┘
+                            │ API Request (OAuth/JSON)
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                   Node.js API Server                   │
+│  - Handles auth, matches tutors, and relays emails     │
+└───────────────────────────┬────────────────────────────┘
+                            │ SQL Queries
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                  PostgreSQL Database                   │
+│  - Relational tables: users, sessions, qualifications  │
+└────────────────────────────────────────────────────────┘
+```
+
+### 🛠️ Stack & Architecture
+
+- **Next.js & React**: Front-end framework supporting page routes and interactive client states.
+- **Node.js Express Server**: Handles session booking calculations, payment relays, and matching logic.
+- **PostgreSQL**: Stores relational tables representing student logs, tutor qualifications, session availability blocks, and billing invoices.

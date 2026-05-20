@@ -15,14 +15,62 @@ order: 8
 
 Through active content creation, Blake's medical education ecosystem has built a dedicated community of aspiring healthcare professionals and medical students, reaching **10,000+ followers on Instagram** and **5,000+ subscribers on YouTube**.
 
-## 🎥 Outreach & Impact
+---
 
-- **High-Yield Medical Explanations**: Crafting micro-learning video assets detailing core concepts for USMLE Step 1 preparation, pathology, and clinical reasoning.
-- **Med-Tech Stream Integrations**: Combining live study streams with custom interactive overlays, Pomodoro mechanics, and chat integrations to foster collaborative study environments.
-- **Educational Tools Demonstrations**: Showcasing open-source tools (like Board Buddy and LuzBuddy) to show students how they can optimize their digital study workflows.
+## The Problem
 
-## ⚙️ Content & Production Stack
+Preclinical medical education is notoriously dense. Traditional textbooks (like First Aid or Robbins Pathology) present lists of information that are hard to retain during prolonged study sessions. High-yield concept explainers are often hidden behind expensive school course portals. Students benefit significantly from:
+1. Short-form, micro-learning video explainers.
+2. Dynamic visual graphics illustrating disease pathways.
+3. Co-studying spaces to stay accountable.
 
-- **Video Editing & Graphics**: Adobe Premiere Pro, After Effects, and Figma for premium animations and thumbnail graphics.
-- **Stream Automation**: Custom OBS plugins and Node.js stream bots syncing twitch chat interactions with study timers.
-- **Community Platforms**: Instagram, YouTube, and Discord serving as resource distribution hubs.
+---
+
+## The Solution: A Cross-Platform Micro-Learning Network
+
+This content ecosystem resolves this by delivering free, high-yield clinical education:
+- **Micro-Video Explainers (Instagram Reels)**: Focused, 60-second reviews covering high-yield USMLE Step 1 topics, diagnostic loops, and mnemonic maps.
+- **System-Based Reviews (YouTube)**: In-depth breakdowns of complex physiology systems (e.g. renal physiology, cardiology murmurs).
+- **Interactive Live Study Sessions (Twitch)**: Uses the **BoardBuddy** platform to overlay real-time Pomodoro timers, collaborative tomato gardens, and live AI tutor Q&A to gamify study streams.
+
+---
+
+## Content Production Workflow
+
+The content pipeline utilizes standard professional software and custom automated tools to speed up editing:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                  Concept & Scripting                   │
+├────────────────────────────────────────────────────────┤
+│  Extract high-yield topics from USMLE Step 1 lists     │
+└───────────────────────────┬────────────────────────────┘
+                            │ Script Draft
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                   Recording & Assets                   │
+│  - Raw video capture (Mirrorless Camera + Mic)         │
+│  - Automated B-Roll generation using Python scripts     │
+└───────────────────────────┬────────────────────────────┘
+                            │ Raw Assets
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                Post-Production (Editing)               │
+│  - Adobe Premiere: Cuts, transcript overlay, animations│
+│  - Photoshop / Figma: High-contrast title thumbnails   │
+└───────────────────────────┬────────────────────────────┘
+                            │ Final Export
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│                  Distribution Core                     │
+│  - YouTube: Long-form conceptual system reviews        │
+│  - Instagram: Micro-learning Reels & Story Q&As        │
+│  - Twitch: Interactive, bot-guided study streams       │
+└────────────────────────────────────────────────────────┘
+```
+
+### 🛠️ Production Stack
+
+- **Editing & Design**: Adobe Premiere Pro for short-form pacing and transcription, After Effects for kinetic text animations, and Figma/Photoshop for clean graphic assets.
+- **Stream Overlay Integrations**: OBS Studio connected via WebSockets to Node.js backend controllers to sync study timers and viewer leaderboards.
+- **Asset Automation**: Automated pipelines that call image generation APIs to render anatomical structures.

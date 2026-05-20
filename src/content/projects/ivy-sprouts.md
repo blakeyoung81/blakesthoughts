@@ -13,16 +13,45 @@ order: 6
 
 # Ivy Sprouts
 
-**Ivy Sprouts** focuses on early childhood development, presenting clean interactive learning applications and curriculum maps for parents and preschool educators.
+**Ivy Sprouts** focuses on early childhood development, presenting clean, interactive learning applications and curriculum maps for parents and preschool educators.
 
-## 🌿 Educational Intent
+---
 
-- **Skill Tracking**: Visual developmental logs showing milestones in early reading, cognitive reasoning, and social coordination.
-- **Activity Repositories**: Gamified activity ideas easily printable and filterable by age and developmental focus.
-- **Resource Libraries**: Standardized guides assisting caregivers in creating positive learning spaces.
+## The Problem
 
-## 🛠️ Stack & Architecture
+Parents and early childhood educators require clear, science-backed guidance to support early learning milestones. However, existing developmental trackers are often locked behind paywalls, cluttered with ad networks, or overly complex to navigate while managing children. There is a need for a free, high-speed, print-friendly resource bank that helps track milestone milestones across motor, cognitive, and language domains.
 
-- **Astro**: Static site generator providing fast loading speeds for media-heavy resource libraries.
-- **Tailwind CSS**: Custom, soft color schemes designed to appeal to parents and educators alike.
-- **React**: Interactive elements for milestone tracking and milestone calculator widgets.
+---
+
+## The Solution: A Clean Milestone Tracker & Resource Bank
+
+Ivy Sprouts provides an open-source educational dashboard:
+- **Milestone Calculators**: Interactive React widgets that help caregivers input a child's age (in months) and instantly see relevant cognitive, motor, and social benchmarks.
+- **Milestone Logs**: Saves progress locally in the browser so parents can maintain simple, offline logs of developmental milestones.
+- **Categorized Activities Engine**: A library of physical play, cognitive games, and language builders that can be filtered and printed easily.
+
+---
+
+## Technical Architecture
+
+Ivy Sprouts utilizes Astro's static site generation to prioritize ultra-fast load times and print layouts, and incorporates React for calculations:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                   Astro Static Page                    │
+├────────────────────────────────────────────────────────┤
+│  Pre-renders full activity documents, PDFs, and guides │
+│                                                        │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │ Hydrated React Island (Milestone Calculator)     │  │
+│  │ - Takes age input and yields CDC/WHO metrics      │  │
+│  │ - Stores progress locally via Web LocalStorage   │  │
+│  └──────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────┘
+```
+
+### 🛠️ Stack & Architecture
+
+- **Astro Static Site Generator**: Delivers optimized HTML sheets, minimizing mobile bandwidth usage for parents on-the-go.
+- **React Components**: Power the interactive calculator sliders and milestone checklist states.
+- **Web Storage API (LocalStorage)**: Automatically saves progress records client-side, eliminating the need for server databases or account setup to maintain data privacy.
