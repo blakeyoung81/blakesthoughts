@@ -1,0 +1,543 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Fetch local projects from markdown collection
+const markdownProjects = await getCollection('projects');
+
+// Process markdown projects to match homepage schema
+const localProjectsList = markdownProjects.map(project => {
+  const slug = project.id.replace(/\.(md|mdx)$/, '');
+  return {
+    title: project.data.title,
+    description: project.data.description,
+    url: `/projects/${slug}`,
+    category: "Med-Tech / Software",
+    tech: project.data.tech || [],
+    color: "from-blue-600 to-indigo-500",
+    image: project.data.cover
+  };
+});
+
+// Define external/additional projects to showcase
+const externalProjectsList = [
+  {
+    title: "Ivy Tutoring",
+    description: "Premium tutoring services connecting students with top-tier educators for personalized learning experiences.",
+    url: "https://ivytutoring.net",
+    category: "Education Platform",
+    tech: ["Next.js", "React", "Node.js", "PostgreSQL"],
+    color: "from-green-500 to-emerald-600",
+    image: "/images/projects/ivy-tutoring-hero.png"
+  },
+  {
+    title: "Ivy Med",
+    description: "Medical education and preparation resources for USMLE Step 1 and clinical board preparations.",
+    url: "https://ivymed.net", 
+    category: "Medical Ed-Tech",
+    tech: ["Astro", "React", "AI Integration", "Tailwind CSS"],
+    color: "from-blue-500 to-cyan-600",
+    image: "/images/projects/ivy-med-hero.png"
+  },
+  {
+    title: "Ivy Sprouts",
+    description: "Early childhood development and educational programs fostering young minds and creativity.",
+    url: "https://ivysprouts.net",
+    category: "Early Education",
+    tech: ["Astro", "React", "Tailwind CSS"],
+    color: "from-purple-500 to-pink-600",
+    image: "/images/projects/ivy-sprouts-hero.png"
+  },
+  {
+    title: "Restoring Hope Clinic", 
+    description: "Community healthcare clinic website providing medical schedules and patient intake portals.",
+    url: "https://restoringhopeclinic.org",
+    category: "Healthcare Portal",
+    tech: ["React", "CSS3", "Forms", "Node.js"],
+    color: "from-orange-500 to-red-600",
+    image: "/images/projects/restoring-hope-hero.png"
+  },
+  {
+    title: "Colonist Buddy",
+    description: "Chrome extension that tracks resource cards and game metrics in real-time on Colonist.io.",
+    url: "https://chromewebstore.google.com/detail/colonist-buddy/mkbpkhkcggpopakinkdcbigocdjjbogp",
+    category: "Chrome Extension",
+    tech: ["Chrome Extension", "JavaScript", "DOM Parsing", "Analytics"],
+    color: "from-amber-500 to-orange-600",
+    image: "https://lh3.googleusercontent.com/Ov-K7PG2MTSCm754jisXjgri5ZVXwOKPm8RlU4rjW8vTYLhoDcYtK5wPAcIHh1rD7ENdgWM5lklfbos5K95UQIYm6A=s1280-w1280-h800"
+  },
+  {
+    title: "Image Finder & Definer",
+    description: "Chrome extension that uses AI to define and generate visuals for any highlighted text.",
+    url: "https://chromewebstore.google.com/detail/image-finder/ivytutoring.net",
+    category: "Chrome Extension",
+    tech: ["Chrome Extension", "JavaScript", "OpenAI API", "Education"],
+    color: "from-teal-500 to-cyan-600",
+    image: "https://lh3.googleusercontent.com/VJcOZYMPjyt_VRWYe9K6-m1cCTMA5ajDyLupYEsDuDt9gjoBwmOKJwwo9UF5gfbf357ePgJGi1IAv58vNSE_kQFp6A=s1280-w1280-h800"
+  }
+];
+
+// Combine all projects
+const allProjects = [...localProjectsList, ...externalProjectsList];
+
+// De-duplicate and list skills for the interactive board
+const skills = {
+  "Languages": ["TypeScript", "JavaScript", "Python", "R", "SQL", "HTML5", "CSS3"],
+  "Frameworks & Web": ["React", "Next.js", "Astro", "Node.js", "Express", "Tailwind CSS"],
+  "Libraries & AI": ["Three.js", "WebGL", "Supabase", "Cloud Firestore", "OpenAI API", "PyTorch", "Machine Learning"]
+};
+---
+
+<BaseLayout title="Resume & Project Showcase">
+  <div class="max-w-6xl mx-auto px-4 text-white print-container">
+    
+    <!-- Resume Header / Bio Section -->
+    <header class="mb-12 border-b border-white/10 pb-8 relative flex flex-col md:flex-row md:justify-between md:items-end gap-6 print:pb-4 print:mb-6">
+      <div>
+        <h1 class="text-5xl font-black bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent tracking-tight mb-2 print:text-black print:text-4xl">
+          Blake Young
+        </h1>
+        <p class="text-xl md:text-2xl text-blue-400 font-bold mb-4 print:text-blue-700 print:text-lg">
+          MD Candidate & Med-Tech Engineer
+        </p>
+        <p class="text-white/80 max-w-2xl text-base sm:text-lg leading-relaxed print:text-gray-700 print:text-sm">
+          Bridging clinical medicine, advanced automation, and interactive software. 
+          Third-year medical student building high-yield education tools, clinical decision supports, 
+          and production automation pipelines.
+        </p>
+      </div>
+      
+      <!-- Contact details -->
+      <div class="bg-white/5 border border-white/10 p-6 rounded-2xl md:w-80 backdrop-blur-sm print:bg-transparent print:border-0 print:p-0 print:w-auto">
+        <ul class="space-y-2 text-sm text-white/80 print:text-gray-700 print:grid print:grid-cols-2 print:gap-x-4 print:space-y-0">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-400 print:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+            <a href="mailto:blake@ivytutoring.net" class="hover:underline text-blue-400 print:text-black print:no-underline">blake@ivytutoring.net</a>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-400 print:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>Little Rock, AR (UAMS)</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-400 print:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            </svg>
+            <a href="https://github.com/blakeyoung81" target="_blank" rel="noopener noreferrer" class="hover:underline text-blue-400 print:text-black">github.com/blakeyoung81</a>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-400 print:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+            </svg>
+            <a href="https://blakesthoughts.com" class="hover:underline text-blue-400 print:text-black">blakesthoughts.com</a>
+          </li>
+        </ul>
+        <button 
+          onclick="window.print()" 
+          class="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 text-sm print-hide"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+          </svg>
+          Print / Save PDF
+        </button>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 print:flex print:flex-col print:gap-6">
+      
+      <!-- Left Column: Education and Experience (Timeline) -->
+      <div class="lg:col-span-2 space-y-12 print:space-y-6">
+        
+        <!-- Education section -->
+        <section>
+          <h2 class="text-2xl font-extrabold border-l-4 border-blue-500 pl-4 mb-6 text-white print:text-black print:text-xl print:mb-3">
+            Education
+          </h2>
+          <div class="space-y-6 print:space-y-4">
+            <!-- Medical School -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">MD Candidate</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">2023 - Present</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">University of Arkansas for Medical Sciences (UAMS)</p>
+              <p class="text-xs text-white/60 mb-2 print:text-gray-500">Third-year clinical rotations. Applying clinical reasoning to hospital wards and surgeries.</p>
+              <p class="text-sm text-white/90 print:text-gray-800 print:text-xs">
+                Focusing on medical education support, AI tutoring systems, and software solutions to optimize student learning curves and clinical workloads.
+              </p>
+            </div>
+
+            <!-- Master in Medicine & MPH -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">Master in Medicine & Master of Public Health (MPH)</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">Finished May 2026</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">University of Arkansas for Medical Sciences (UAMS)</p>
+              <p class="text-sm text-white/90 print:text-gray-800 print:text-xs">
+                Completed dual postgraduate studies focusing on clinical systems research, public health informatics, and statistical machine learning integration.
+              </p>
+            </div>
+            
+            <!-- Undergraduate -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">Foundational Pre-Medical Studies</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">2019 - 2023</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">Harvard University</p>
+              <p class="text-sm text-white/90 print:text-gray-800 print:text-xs">
+                Conducted coursework and research in molecular biology, human physiology, chemistry, and computer science. 
+                Designed custom utility scripts to manage scientific data processing pipelines.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Experience section -->
+        <section>
+          <h2 class="text-2xl font-extrabold border-l-4 border-blue-500 pl-4 mb-6 text-white print:text-black print:text-xl print:mb-3">
+            Experience & Ventures
+          </h2>
+          <div class="space-y-8 print:space-y-4">
+            <!-- Stealth AI Startup -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">Founder & Machine Learning Researcher</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">2025 - Present</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">Stealth AI Startup</p>
+              <p class="text-xs text-white/60 mb-2 print:text-gray-500">Pioneering privacy-first predictive models and agentic workflows for clinical operations and content pipelines.</p>
+              <ul class="list-disc list-inside text-sm text-white/90 space-y-1 print:text-gray-800 print:text-xs">
+                <li>Developing fine-tuned, domain-specific large language models for high-accuracy medical diagnostics support.</li>
+                <li>Architecting custom reinforcement learning and retrieval-augmented generation (RAG) pipelines.</li>
+                <li>Spearheading business strategy, technical product roadmap, and seed-round investor relations.</li>
+              </ul>
+            </div>
+
+            <!-- Ivy Enterprises -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">Founder & Lead Engineer</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">2021 - Present</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">Ivy Enterprises (Ivy Tutoring, Ivy Med, Ivy Sprouts)</p>
+              <p class="text-xs text-white/60 mb-2 print:text-gray-500">Premium education, early development, and specialized board-preparation platforms.</p>
+              <ul class="list-disc list-inside text-sm text-white/90 space-y-1 print:text-gray-800 print:text-xs">
+                <li>Built custom CRM and online scheduler tools using Next.js, React, and Node.js.</li>
+                <li>Designed high-yield, flashcard-alternative interfaces enabling students to digest complex medical curricula.</li>
+                <li>Scaled platforms to process client schedules, coordinate payments, and aggregate student testing logs.</li>
+              </ul>
+            </div>
+
+            <!-- Software Engineering -->
+            <div class="relative pl-6 border-l border-white/20 print:border-gray-300">
+              <div class="absolute -left-1.5 top-1.5 w-3 h-3 bg-blue-500 rounded-full"></div>
+              <div class="flex flex-col sm:flex-row justify-between mb-1">
+                <h3 class="font-bold text-lg text-white print:text-black print:text-sm">Independent Med-Tech & Automation Developer</h3>
+                <span class="text-xs text-blue-400 font-bold uppercase print:text-blue-700">2020 - Present</span>
+              </div>
+              <p class="text-sm font-semibold text-white/80 print:text-gray-700">Software Projects & Automation Platforms</p>
+              <ul class="list-disc list-inside text-sm text-white/90 space-y-1 print:text-gray-800 print:text-xs">
+                <li>Developed **Board Buddy**, a live-stream overlay and medical chatbot featuring a Supabase-synced Pomodoro system, interactive SVG gamification, and a GPT-4 medical tutor.</li>
+                <li>Created **Social Sync**, a Next.js/Python platform automating cross-platform video rendering, Whisper transcriptions, and multi-platform publishing (OAuth, Facebook, Instagram, YouTube).</li>
+                <li>Released multiple highly-rated **Chrome Extensions** to the Chrome Web Store including *Colonist Buddy* (Catan tracker) and *Image Finder & Definer* (AI reading aids).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: Interactive Skills & Dynamic Project filtering -->
+      <div class="space-y-8 print:space-y-6">
+        
+        <!-- Skills Arsenal -->
+        <section class="bg-white/5 border border-white/10 p-6 rounded-3xl backdrop-blur-sm print:bg-transparent print:border-0 print:p-0">
+          <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2 print:text-black print:text-lg print:border-b print:border-gray-300 print:pb-1">
+            <svg class="w-5 h-5 text-blue-400 print:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+            Technical Arsenal
+          </h2>
+          <p class="text-xs text-white/60 mb-4 print-hide">
+            💡 Click on individual skills to highlight the projects in the list below that utilize them.
+          </p>
+          
+          <div class="space-y-6">
+            {Object.entries(skills).map(([category, items]) => (
+              <div key={category}>
+                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 print:text-blue-700">{category}</h3>
+                <div class="flex flex-wrap gap-2">
+                  {items.map(skill => (
+                    <button 
+                      class="skill-btn bg-white/5 border border-white/10 hover:bg-white/10 text-white text-xs px-3 py-1.5 rounded-full transition-all duration-300 focus:outline-none print:bg-gray-100 print:text-black print:border-gray-300 print:pointer-events-none"
+                      data-skill={skill}
+                    >
+                      {skill}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Brief info box -->
+        <section class="bg-gradient-to-br from-blue-500/10 to-purple-600/10 border border-blue-500/20 p-6 rounded-3xl backdrop-blur-sm print:hidden">
+          <h3 class="font-bold text-white mb-2 text-base">Digital Garden Concept</h3>
+          <p class="text-xs text-white/80 leading-relaxed">
+            This resume details the code repositories and systems Blake built. 
+            Select any skill token to visualize its usage. Clicking "Print / Save PDF" 
+            generates a standardized two-column offline paper copy.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <!-- Full Width Section: Project Catalog -->
+    <section class="mt-16 print:mt-8">
+      <h2 class="text-2xl font-extrabold border-l-4 border-blue-500 pl-4 mb-8 text-white print:text-black print:text-xl print:mb-3">
+        Project Showcase Catalog
+      </h2>
+      <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 print:grid-cols-1 print:gap-4">
+        {allProjects.map(project => (
+          <div 
+            class="project-card group/card bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-500 relative flex flex-col print:bg-transparent print:border-b print:border-gray-200 print:rounded-none print:pb-4 print:last:border-0"
+            data-tech={project.tech.join(',')}
+          >
+            <!-- Top line accent -->
+            <div class={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${project.color} print:hidden`}></div>
+            
+            <div class="p-6 flex flex-col flex-grow print:p-0">
+              <!-- Category and Platform -->
+              <span class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1 print:text-blue-700">{project.category}</span>
+              
+              <!-- Title -->
+              <h3 class="text-xl font-bold text-white mb-2 group-hover/card:text-blue-400 transition-colors print:text-black print:text-sm print:mb-1">
+                <a href={project.url} class="hover:underline flex items-center justify-between gap-2 print:no-underline">
+                  {project.title}
+                  <svg class="w-4 h-4 opacity-40 group-hover/card:opacity-100 group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 transition-all print:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </a>
+              </h3>
+              
+              <!-- Description -->
+              <p class="text-white/70 text-sm leading-relaxed mb-6 flex-grow print:text-gray-700 print:text-xs print:mb-2">
+                {project.description}
+              </p>
+              
+              <!-- Tech stack tokens -->
+              <div class="flex flex-wrap gap-1.5 mt-auto">
+                {project.tech.map(t => (
+                  <span class="tech-tag bg-white/5 border border-white/10 text-white/80 text-[10px] px-2.5 py-0.5 rounded-full transition-all duration-300 print:bg-gray-100 print:text-black print:border-gray-200">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<!-- Client Side Scripting for Skills Highlight -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const skillButtons = document.querySelectorAll('.skill-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    // Store currently selected skills
+    let selectedSkills = new Set();
+    
+    skillButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const skill = btn.getAttribute('data-skill');
+        
+        // Toggle selected state
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          btn.classList.remove('bg-blue-600/30', 'border-blue-400', 'text-blue-300', 'shadow-md');
+          btn.classList.add('bg-white/5', 'border-white/10', 'text-white');
+        } else {
+          selectedSkills.add(skill);
+          btn.classList.remove('bg-white/5', 'border-white/10', 'text-white');
+          btn.classList.add('bg-blue-600/30', 'border-blue-400', 'text-blue-300', 'shadow-md');
+        }
+        
+        // Filter projects
+        filterProjects();
+      });
+    });
+    
+    function filterProjects() {
+      if (selectedSkills.size === 0) {
+        // No skills selected, reset all projects
+        projectCards.forEach(card => {
+          card.classList.remove('opacity-30', 'scale-95', 'grayscale', 'border-white/5');
+          card.classList.add('opacity-100', 'scale-100', 'border-white/10');
+          
+          // Reset tech tags in card
+          card.querySelectorAll('.tech-tag').forEach(tag => {
+            tag.classList.remove('bg-blue-500/20', 'border-blue-400/30', 'text-blue-200');
+            tag.classList.add('bg-white/5', 'border-white/10', 'text-white/80');
+          });
+        });
+        return;
+      }
+      
+      projectCards.forEach(card => {
+        const cardTechStr = card.getAttribute('data-tech') || '';
+        const cardTechs = cardTechStr.split(',');
+        
+        // Check how many selected skills this card matches
+        const matches = cardTechs.filter(tech => selectedSkills.has(tech));
+        const isMatch = matches.length > 0;
+        
+        if (isMatch) {
+          // Highlight card
+          card.classList.remove('opacity-30', 'scale-95', 'grayscale', 'border-white/5');
+          card.classList.add('opacity-100', 'scale-100', 'border-white/10');
+          
+          // Highlight specific matching tech tags inside card
+          card.querySelectorAll('.tech-tag').forEach(tag => {
+            const tagText = tag.textContent.trim();
+            if (selectedSkills.has(tagText)) {
+              tag.classList.remove('bg-white/5', 'border-white/10', 'text-white/80');
+              tag.classList.add('bg-blue-500/20', 'border-blue-400/30', 'text-blue-200');
+            } else {
+              tag.classList.remove('bg-blue-500/20', 'border-blue-400/30', 'text-blue-200');
+              tag.classList.add('bg-white/5', 'border-white/10', 'text-white/80');
+            }
+          });
+        } else {
+          // Dim card
+          card.classList.remove('opacity-100', 'scale-100', 'border-white/10');
+          card.classList.add('opacity-30', 'scale-95', 'grayscale', 'border-white/5');
+          
+          // Reset tech tags in dimmed card
+          card.querySelectorAll('.tech-tag').forEach(tag => {
+            tag.classList.remove('bg-blue-500/20', 'border-blue-400/30', 'text-blue-200');
+            tag.classList.add('bg-white/5', 'border-white/10', 'text-white/80');
+          });
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Custom styles for resume */
+  .skill-btn {
+    cursor: pointer;
+  }
+  
+  /* Print Stylesheet overrides */
+  @media print {
+    /* Hide navigation header, footer, background elements, print buttons */
+    header.fixed,
+    footer,
+    .print-hide,
+    .stars-bg,
+    .absolute,
+    .fixed,
+    svg.w-4 {
+      display: none !important;
+    }
+    
+    /* Reset background and layout for printing */
+    body {
+      background: white !important;
+      color: black !important;
+      font-size: 11pt !important;
+      line-height: 1.5 !important;
+    }
+    
+    .print-container {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: black !important;
+    }
+    
+    main {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+    
+    h1, h2, h3, p, span, li, a {
+      color: black !important;
+      text-shadow: none !important;
+    }
+    
+    h1 {
+      font-size: 24pt !important;
+      font-weight: bold !important;
+      margin-bottom: 4pt !important;
+    }
+    
+    /* Setup print columns */
+    .grid {
+      display: flex !important;
+      flex-direction: row !important;
+      gap: 20pt !important;
+    }
+    
+    .lg\:col-span-2 {
+      width: 65% !important;
+    }
+    
+    .space-y-12 > * + *,
+    .space-y-8 > * + * {
+      margin-top: 15pt !important;
+    }
+    
+    .pl-6 {
+      padding-left: 10pt !important;
+    }
+    
+    .border-l-4 {
+      border-left-width: 3pt !important;
+      border-left-color: #1d4ed8 !important; /* Royal Blue */
+    }
+    
+    .border-l {
+      border-left-width: 1px !important;
+      border-left-color: #d1d5db !important;
+    }
+    
+    .absolute {
+      display: none !important; /* Hide timeline nodes */
+    }
+    
+    /* Project showcase layout for print */
+    #projects-grid {
+      display: block !important;
+    }
+    
+    .project-card {
+      margin-bottom: 12pt !important;
+      border: 0 !important;
+      border-bottom: 1px solid #e5e7eb !important;
+      padding-bottom: 8pt !important;
+    }
+    
+    .tech-tag {
+      background: #f3f4f6 !important;
+      border: 1px solid #e5e7eb !important;
+      color: black !important;
+    }
+  }
+</style>

@@ -1,4 +1,5 @@
-import { useRef, useMemo, useState, useEffect, Suspense, Component, ReactNode } from 'react';
+import { useRef, useMemo, useState, useEffect, Suspense, Component } from 'react';
+import type { ReactNode } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text, Image as DreiImage, Stars } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -85,6 +86,10 @@ function Word({ topic, onHover, onLeave, ...props }: WordProps) {
     }
     if (lowerTopic === 'chess') {
       window.location.href = 'https://www.chess.com/member/steamedhams81';
+      return;
+    }
+    if (lowerTopic === 'medical') {
+      window.location.href = '/resume';
       return;
     }
 
@@ -282,7 +287,13 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
     height = maxWidth / imageAspect;
   }
 
-  const scale: [number, number] = [width, height];
+  // Apply scaling modifier for specific images
+  let scaleModifier = 1.0;
+  if (currentImageUrl.includes('Medical.png')) {
+    scaleModifier = 0.65;
+  }
+
+  const scale: [number, number] = [width * scaleModifier, height * scaleModifier];
 
   useFrame(() => {
     if (meshRef.current && meshRef.current.material) {
