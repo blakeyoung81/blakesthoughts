@@ -4,12 +4,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allProjects = await getCollection('projects');
 
-// Sort projects by date in descending order
-const sortedProjects = allProjects.sort((a, b) => {
-  const dateA = a.data.pubDate ? new Date(a.data.pubDate).getTime() : 0;
-  const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
-  return dateB - dateA;
-});
+// Filter drafts and sort projects by date in descending order
+const sortedProjects = allProjects
+  .filter(project => !project.data.draft)
+  .sort((a, b) => {
+    const dateA = a.data.pubDate ? new Date(a.data.pubDate).getTime() : 0;
+    const dateB = b.data.pubDate ? new Date(b.data.pubDate).getTime() : 0;
+    return dateB - dateA;
+  });
 
 // Format date function
 const formatDate = (date) => {

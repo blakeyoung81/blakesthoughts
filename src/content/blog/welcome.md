@@ -2,6 +2,7 @@
 title: "Welcome to Blake's Thoughts"
 description: "Why I'm opening a public notebook on the web."
 pubDate: 2025-05-07
+tags: ["Essays"]
 ---
 
 > "Medicine, code, and poetry all start with curiosity."

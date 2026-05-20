@@ -2,7 +2,7 @@
 title: "Tracking Relationships in Vector Spaces"
 description: "Exploring the philosophical tension of embedding our human connections into high-dimensional vector databases: does it enhance our relationships, or commodify them?"
 pubDate: 2026-05-19
-tags: ["Philosophy", "Poetry", "Technology", "Meaning"]
+tags: ["Philosophy", "Poetry", "Technology", "Meaning", "Relationships"]
 ---
 
 We are living in an era of cognitive outsourcing. We trust search engines with our memory, GPS with our orientation, and now, vector databases with our relationships. 
