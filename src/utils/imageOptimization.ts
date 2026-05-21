@@ -83,13 +83,13 @@ export class ImageLoader {
  */
 export function getTopicImagePath(topic: string): string {
   // Use the actual topic name with spaces - Vercel handles this correctly for static files
-  return `/images/topics/${topic}.png`;
+  return `/images/topics/${topic}.png?v=2`;
 }
 
 /**
  * Get encoded image path (for URL usage where encoding is needed)
  */
 export function getTopicImagePathEncoded(topic: string): string {
-  return `/images/topics/${encodeURIComponent(topic)}.png`;
+  return `/images/topics/${encodeURIComponent(topic)}.png?v=2`;
 }
 

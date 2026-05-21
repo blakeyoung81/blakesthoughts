@@ -53,9 +53,9 @@ const blakeProjects = allProjects
 
 <BaseLayout>
 	<!-- Preload critical images for faster loading -->
-	<link rel="preload" href="/images/topics/Default.png" as="image" slot="head" />
+	<link rel="preload" href="/images/topics/Default.png?v=2" as="image" slot="head" />
 	{finalTopics.slice(0, 3).map(topic => (
-		<link rel="preload" href={`/images/topics/${topic}.png`} as="image" slot="head" />
+		<link rel="preload" href={`/images/topics/${topic}.png?v=2`} as="image" slot="head" />
 	))}
 	
 	<div class="relative w-full h-screen">
@@ -68,7 +68,7 @@ const blakeProjects = allProjects
 		
 		<!-- Desktop: 3D Neural Net Scene (hidden on mobile for performance) -->
 		<div class="hidden md:block absolute inset-0 z-10 w-full h-full">
-			<NeuralNetScene client:load topics={finalTopics} />
+			<NeuralNetScene client:only="react" topics={finalTopics} />
 		</div>
 
 		<!-- Title bottom right - only show on desktop -->

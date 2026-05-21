@@ -22,4 +22,15 @@ export default defineConfig({
       theme: 'github-dark',
     },
   },
+  vite: {
+    resolve: {
+      dedupe: ['react', 'react-dom', 'three', '@react-three/fiber', '@react-three/drei']
+    },
+    ssr: {
+      noExternal: ['@react-three/fiber', '@react-three/drei', 'three']
+    },
+    optimizeDeps: {
+      include: ['@react-three/fiber', '@react-three/drei', 'three']
+    }
+  }
 });

@@ -3,6 +3,12 @@ import { useState, useEffect } from 'react';
 export function MobileTopicCarousel({ topics = [] }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [fadeClass, setFadeClass] = useState('opacity-100');
+    const [isMounted, setIsMounted] = useState(false);
+    
+    // Set mounted on client to prevent hydration mismatch
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
     
     // Auto-rotate through topics
     useEffect(() => {
@@ -22,22 +28,22 @@ export function MobileTopicCarousel({ topics = [] }) {
         return () => clearInterval(interval);
     }, [topics]);
     
-    if (topics.length === 0) {
+    if (!isMounted || topics.length === 0) {
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <div className="text-center">
                     <h1 className="text-5xl font-bold text-white drop-shadow-lg mb-4">
                         Blake's Thoughts
                     </h1>
-                    <p className="text-white/80 text-lg">Loading...</p>
+                    <p className="text-white/80 text-lg animate-pulse">Loading...</p>
                 </div>
             </div>
         );
     }
     
     const currentTopic = topics[currentIndex];
-    // Use actual filename with spaces - Vercel handles this correctly for static files
-    const imageUrl = `/images/topics/${currentTopic}.png`;
+    // Use encodeURI to handle spaces cleanly while preserving query parameters
+    const imageUrl = encodeURI(`/images/topics/${currentTopic}.png?v=2`);
     
     const handleClick = () => {
         const lowerTopic = currentTopic.toLowerCase();
@@ -116,7 +122,7 @@ export function MobileTopicCarousel({ topics = [] }) {
                             const encodedUrl = imageUrl.replace(/ /g, '%20');
                             img.src = encodedUrl;
                         } else {
-                            img.src = '/images/topics/Default.png';
+                            img.src = '/images/topics/Default.png?v=2';
                         }
                     }}
                 />

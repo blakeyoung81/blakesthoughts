@@ -30,10 +30,59 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     console.error("NeuralNetScene Error:", error, errorInfo);
   }
 
+  handleRetry = () => {
+    this.setState({ hasError: false, error: null });
+    window.location.reload();
+  };
+
   render() {
     if (this.state.hasError) {
-      if (this.props.fallback) return this.props.fallback;
-      return null; // Fail silently but don't crash proper
+      if (this.props.fallback !== undefined) return this.props.fallback;
+      
+      const errorMessage = this.state.error?.message || "Unknown WebGL or rendering error";
+      const isWebGLIssue = errorMessage.toLowerCase().includes("webgl") || 
+                           errorMessage.toLowerCase().includes("context lost") || 
+                           errorMessage.toLowerCase().includes("gpu");
+
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-[#030014]/85 p-4 relative z-50 rounded-2xl">
+          <div className="bg-slate-950/90 backdrop-blur-md border border-red-500/20 rounded-2xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl shadow-red-500/5 transition-all duration-300">
+            <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-8 h-8 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+              3D Experience Unavailable
+            </h3>
+            
+            <p className="text-gray-400 text-sm mb-6 leading-relaxed">
+              {isWebGLIssue 
+                ? "WebGL might be disabled, unsupported, or blocked by your browser or graphics hardware. Try enabling hardware acceleration in your browser settings." 
+                : "A rendering error occurred while loading the interactive background."}
+            </p>
+
+            <div className="text-left bg-red-950/30 border border-red-500/10 rounded-xl p-4 mb-6 max-h-36 overflow-y-auto">
+              <span className="text-xs font-semibold text-red-400 block mb-1">Diagnostic Log:</span>
+              <pre className="text-[10px] sm:text-xs text-red-300 font-mono whitespace-pre-wrap break-all leading-normal">
+                {errorMessage}
+                {this.state.error?.stack && `\n\nStack Trace:\n${this.state.error.stack}`}
+              </pre>
+            </div>
+
+            <button
+              onClick={this.handleRetry}
+              className="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-red-500/20 flex items-center justify-center space-x-2 min-h-[48px]"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 3v3h-3" />
+              </svg>
+              <span>Reload Experience</span>
+            </button>
+          </div>
+        </div>
+      );
     }
     return this.props.children;
   }
@@ -55,6 +104,13 @@ function Word({ topic, onHover, onLeave, ...props }: WordProps) {
     const theta = Math.random() * 2 * Math.PI; // Random angle 0 to 2π
 
     const initialPos = new THREE.Vector3().setFromSphericalCoords(radius, phi, theta);
+    
+    // Prevent words from getting too close to the camera (at z = 30)
+    // Capping z at 10 guarantees a safe distance of at least 20 units
+    if (initialPos.z > 10) {
+      initialPos.z = -Math.abs(initialPos.z);
+    }
+
     const velocity = new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1);
     const sin = Math.random() * 2 * Math.PI;
     const cos = Math.random() * 2 * Math.PI;
@@ -207,19 +263,20 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
   const meshRef = useRef<any>(null);
   const isMobile = isMobileDevice();
   const [imageAspect, setImageAspect] = useState(() => {
-    // Initial state from cache if available
-    return imageDimensionCache.get(imageUrl) || 1;
+    const cleanedUrl = encodeURI(imageUrl);
+    return imageDimensionCache.get(cleanedUrl) || 1;
   });
-  const [currentImageUrl, setCurrentImageUrl] = useState(imageUrl);
+  const [currentImageUrl, setCurrentImageUrl] = useState(() => encodeURI(imageUrl));
   const [imageError, setImageError] = useState(false);
 
   // Update image URL when prop changes
   useEffect(() => {
-    setCurrentImageUrl(imageUrl);
+    const cleanedUrl = encodeURI(imageUrl);
+    setCurrentImageUrl(cleanedUrl);
     setImageError(false);
 
     // Check cache first
-    const cachedAspect = imageDimensionCache.get(imageUrl);
+    const cachedAspect = imageDimensionCache.get(cleanedUrl);
     if (cachedAspect) {
       setImageAspect(cachedAspect);
       return;
@@ -227,52 +284,27 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
 
     // Load image to get its natural dimensions
     const img = new Image();
-    // Only set crossOrigin if needed (different origin)
-    if (typeof window !== 'undefined' && imageUrl.startsWith('http') && !imageUrl.startsWith(window.location.origin)) {
+    if (typeof window !== 'undefined' && cleanedUrl.startsWith('http') && !cleanedUrl.startsWith(window.location.origin)) {
       img.crossOrigin = 'anonymous';
     }
     img.onload = () => {
       const aspect = img.width / img.height;
-      imageDimensionCache.set(imageUrl, aspect); // Cache it
+      imageDimensionCache.set(cleanedUrl, aspect); // Cache it
       setImageAspect(aspect);
     };
     img.onerror = () => {
-      console.warn('Failed to load image:', imageUrl);
-      // Fallback logic remains similar but simplified for brevity
-      if (imageUrl.includes(' ')) {
-        const pathParts = imageUrl.split('/');
-        const encodedParts = pathParts.map(part => part.includes(' ') ? encodeURIComponent(part) : part);
-        const encodedUrl = encodedParts.join('/');
-        const fallbackImg = new Image();
-        if (typeof window !== 'undefined' && encodedUrl.startsWith('/')) {
-          fallbackImg.src = `${window.location.origin}${encodedUrl}`;
-        } else {
-          fallbackImg.src = encodedUrl;
-        }
-        fallbackImg.onload = () => {
-          const aspect = fallbackImg.width / fallbackImg.height;
-          imageDimensionCache.set(encodedUrl, aspect);
-          setCurrentImageUrl(encodedUrl);
-          setImageAspect(aspect);
-        };
-        fallbackImg.onerror = () => {
-          console.warn('Failed to load encoded image:', encodedUrl);
-          setImageError(true);
-        };
-      } else {
-        setImageError(true);
-      }
+      console.warn('Failed to load image:', cleanedUrl);
+      setImageError(true);
     };
     // Use absolute URL for loading test
-    if (typeof window !== 'undefined' && imageUrl.startsWith('/')) {
-      img.src = `${window.location.origin}${imageUrl}`;
+    if (typeof window !== 'undefined' && cleanedUrl.startsWith('/')) {
+      img.src = `${window.location.origin}${cleanedUrl}`;
     } else {
-      img.src = imageUrl;
+      img.src = cleanedUrl;
     }
   }, [imageUrl]);
 
   // Calculate scale so image extends flush to bottom
-  // Updated constraints per user feedback: "Bigger" and "Start at bottom"
   const availableHeight = viewport.height;
 
   // Allow much wider images
@@ -308,14 +340,10 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
   });
 
   // Ensure URL is absolute for proper loading (only in browser)
-  // For static files with spaces, we need to encode them in the URL
   let absoluteImageUrl: string;
   if (typeof window !== 'undefined') {
     if (currentImageUrl.startsWith('/')) {
-      const encodedPath = currentImageUrl.split('/').map(segment =>
-        segment.includes(' ') ? encodeURIComponent(segment) : segment
-      ).join('/');
-      absoluteImageUrl = `${window.location.origin}${encodedPath}`;
+      absoluteImageUrl = `${window.location.origin}${currentImageUrl}`;
     } else {
       absoluteImageUrl = currentImageUrl;
     }
@@ -324,7 +352,7 @@ function BlakeImage({ imageUrl }: BlakeImageProps) {
   }
 
   // Don't render if image failed to load (except default)
-  if (imageError && currentImageUrl !== '/images/topics/Default.png') {
+  if (imageError && currentImageUrl !== '/images/topics/Default.png?v=2') {
     return null;
   }
 
@@ -348,10 +376,15 @@ interface NeuralNetSceneProps {
 }
 
 export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
-  const [imageUrl, setImageUrl] = useState('/images/topics/Default.png');
+  const [imageUrl, setImageUrl] = useState('/images/topics/Default.png?v=2');
   const [preloadedImages, setPreloadedImages] = useState(new Set());
-  const [isReady, setIsReady] = useState(true); // Start ready - don't wait for images
+  const [isMounted, setIsMounted] = useState(false);
   const imageLoader = useRef(new ImageLoader());
+
+  // Set mounted state to true on client-side to prevent SSR hydration mismatches
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Debug: Log topics to ensure they're being passed
   useEffect(() => {
@@ -364,7 +397,7 @@ export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
 
   // Preload images in background (non-blocking)
   useEffect(() => {
-    if (topics.length === 0) {
+    if (topics.length === 0 || !isMounted) {
       return;
     }
 
@@ -373,12 +406,12 @@ export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
     const preloadImages = async () => {
       try {
         // Try to preload default image (non-blocking)
-        imageLoader.current.preloadImage('/images/topics/Default.png').catch(() => {
+        imageLoader.current.preloadImage('/images/topics/Default.png?v=2').catch(() => {
           // Silently fail - images are optional
         });
 
         // Preload topic images in background (non-blocking)
-        const topicUrls = topics.map(topic => getTopicImagePath(topic));
+        const topicUrls = topics.map(topic => encodeURI(getTopicImagePath(topic)));
         imageLoader.current.preloadImages(topicUrls).catch(() => {
           // Silently fail - images are optional
         });
@@ -391,7 +424,7 @@ export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
     };
 
     preloadImages();
-  }, [topics]);
+  }, [topics, isMounted]);
 
   const handleWordHover = (topic: string) => {
     // Set topic image immediately
@@ -399,26 +432,27 @@ export function NeuralNetScene({ topics = [] }: NeuralNetSceneProps) {
     setImageUrl(topicImageUrl);
 
     // Try to preload it in the background for next time
-    imageLoader.current.preloadImage(topicImageUrl).catch(() => {
+    const cleanedUrl = encodeURI(topicImageUrl);
+    imageLoader.current.preloadImage(cleanedUrl).catch(() => {
       // Silently fail - image will still try to load via the Image component
     });
   };
 
   const handleWordLeave = () => {
-    setImageUrl('/images/topics/Default.png');
+    setImageUrl('/images/topics/Default.png?v=2');
   };
 
-  if (!isReady) {
+  if (!isMounted) {
     return (
-      <div className="w-full h-full flex items-center justify-center" style={{ width: '100%', height: '100%' }}>
-        <div className="text-white text-xl animate-pulse">Loading...</div>
+      <div className="w-full h-full flex items-center justify-center bg-slate-950/20" style={{ width: '100%', height: '100%' }}>
+        <div className="text-white text-xl animate-pulse">Loading 3D Experience...</div>
       </div>
     );
   }
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-      <ErrorBoundary fallback={null}>
+      <ErrorBoundary>
         <Canvas
           style={{ width: '100%', height: '100%', display: 'block' }}
           gl={{
